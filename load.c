@@ -216,19 +216,19 @@ struct PropValue *Add_PropValue(struct Property *p, char *buffer,
 {
 	struct PropValue *newv;
 
-	SaveMalloc((void *)newv, sizeof(struct PropValue), "property value structure");
+	SaveMalloc(struct PropValue *, newv, sizeof(struct PropValue), "property value structure");
 
 	if(size < 0)	size  = strlen(value);
 
 	/* +2 because Parse_Float may add 1 char and for trailing '\0' byte */
-	SaveMalloc((void *)newv->value, size+2, "property value buffer");
+	SaveMalloc(char *, newv->value, size+2, "property value buffer");
 	CopyValue(newv->value, value, size, TRUE);		/* copy value */
 
 	if(value2)
 	{
 		if(size2 < 0)	size2 = strlen(value2);
 
-		SaveMalloc((void *)newv->value2, size2+2, "property value2 buffer");
+		SaveMalloc(char *, newv->value2, size2+2, "property value2 buffer");
 		CopyValue(newv->value2, value2, size2, TRUE);
 	}
 	else
@@ -297,13 +297,13 @@ struct Property *Add_Property(struct Node *n, token id, char *id_buf, char *idst
 	struct Property *newp;
 	char *str;
 
-	SaveMalloc((void *)newp, sizeof(struct Property), "property structure");
+	SaveMalloc(struct Property *, newp, sizeof(struct Property), "property structure");
 
 	newp->id = id;							/* init property structure */
 
 	if(id == TKN_UNKNOWN)
 	{
-		SaveMalloc((void *)str, strlen(idstr)+2, "ID string");
+		SaveMalloc(char *, str, strlen(idstr)+2, "ID string");
 		strcpy(str, idstr);
 		newp->idstr = str;
 	}
@@ -514,7 +514,7 @@ struct Node *NewNode(struct Node *parent, int newchild)
 {
 	struct Node *newn, *hlp;
 
-	SaveMalloc((void *)newn, sizeof(struct Node), "node structure");
+	SaveMalloc(struct Node *, newn, sizeof(struct Node), "node structure");
 
 	newn->parent		= parent;		/* init node structure */
 	newn->child		= NULL;
@@ -742,12 +742,12 @@ void LoadSGF(struct SGFInfo *sgf)
 	if(size == -1L)
 		PrintError(FE_SOURCE_READ, sgf->name);
 
-    SaveMalloc((void *)sgf->buffer, size, "source file buffer");
+    SaveMalloc(char *, sgf->buffer, size, "source file buffer");
 
     if(fseek(sgf->file, 0, SEEK_SET) == -1L)	/* read SGF file */
 		PrintError(FE_SOURCE_READ, sgf->name);
 			
-	if(size != fread(sgf->buffer, 1, (size_t)size, sgf->file))
+	if(size != (long)fread(sgf->buffer, 1, (size_t)size, sgf->file))
 		PrintError(FE_SOURCE_READ, sgf->name);
 
 	fclose(sgf->file);

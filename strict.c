@@ -29,7 +29,7 @@ void Crosscheck_Handicap(struct Node *root)
 	struct Property *prop;
 	char *buff = NULL;
 	
-	if(prop = Find_Property(root, TKN_AB)) /* handicap means black stones */
+	if((prop = Find_Property(root, TKN_AB))) /* handicap means black stones */
 	{
 		buff = prop->buffer;
 		/* if there's an AB but no AW than it is likely to be
@@ -46,7 +46,7 @@ void Crosscheck_Handicap(struct Node *root)
 		}
 	}
 
-	if(prop = Find_Property(root, TKN_HA)) /* handicap game info */
+	if((prop = Find_Property(root, TKN_HA))) /* handicap game info */
 	{
 		if(atoi(prop->value->value) != setupstones)
 			PrintError(W_HANDICAP_NOT_SETUP, prop->buffer);

@@ -178,11 +178,15 @@ int PrintError(ULONG type, ...)
 	va_start(arglist, type);
 
 	if(type & ERROR4)
+	{
 		if(sgfc->info->FF >= 4)		type |= ERROR;
 		else						type |= WARNING;
+	}
 	if(type & WARNING_STRICT)
+	{
 		if(option_strict_checking)	type |= ERROR;
 		else						type |= WARNING;
+	}
 
 	if((!error_enabled[(type & ERROR_NUM)-1] && !(type & FATAL_ERROR)
 		 && type != NO_ERROR) || (!option_warnings && (type & WARNING)))
@@ -208,14 +212,14 @@ int PrintError(ULONG type, ...)
 		last_type = NO_ERROR;
 
 
-	if(type & E_ACCUMULATE)				/* accumulate error messages? */
+	if((type & E_ACCUMULATE))			/* accumulate error messages? */
 	{
 		if(va_arg(arglist, int))		/* TRUE: accumulate */
 		{
 			if(ill_count)				/* any errors already accumulated? */
 			{
 				if((illegal + ill_count != pos) ||				/* succeed? */
-				  (ill_type & ERROR_NUM != type & ERROR_NUM))	/* same type? */
+				  ((ill_type & ERROR_NUM)!=(type & ERROR_NUM)))	/* same type? */
 				{
 					PrintError(ill_type, illegal, FALSE);	/* no -> flush */
 					illegal = pos;							/* set new */

@@ -629,13 +629,15 @@ V1.15 (2005-03-19)
 
 - added option -r (restrictive checking)
 - added option -z (reorder variations)
-- added long options --help --version (patch by Thien-Thi Nguyen)
+- added long options --help and --version (patch by Thien-Thi Nguyen)
 - Go: FF4 style pass moves '[]' in old FF formats are now corrected (error 65)
 - tries to be more forgiving of missing ';' and missing '(' characters.
   See examples for error 66 and 67.
 - if property has too many values, then empty values are deleted prior to
   non-empty ones now (e.g. PW[][white] becomes PW[white] instead of PW[])
 - BUGFIX: RE[W++1.0] is flagged as an error now (reported by Matthias Krings)
+- some code cleanup so that strict compilers issue no warnings and compiling
+  with C++ compilers works
 
 
 V1.14 (2003-06-09)

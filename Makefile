@@ -13,10 +13,10 @@ CODEGEN =
 
 OPTIMIZATION = -O1
 
-# OPTIONS = -pedantic -W -Wimplicit -Wreturn-type -Wswitch -Wformat\
-#		  -Wuninitialized -Wparentheses -Wpointer-arith -Wbad-function-cast\
-#		  -Wcast-qual -Wcast-align -Waggregate-return -Wstrict-prototypes\
-#		  -Wnested-externs -Wshadow -Wtraditional -Wchar-subscripts -ansi
+#OPTIONS = -pedantic -W -Wimplicit -Wreturn-type -Wswitch -Wformat\
+#	  -Wuninitialized -Wparentheses -Wpointer-arith -Wbad-function-cast\
+#	  -Wcast-qual -Wcast-align -Waggregate-return -Wstrict-prototypes\
+#	  -Wnested-externs -Wshadow -Wchar-subscripts -ansi
 
 OPTIONS = 
 

@@ -601,7 +601,7 @@ void Check_DoubleProp(struct Node *n)
 						v = p->value;	l = strlen(v->value);
 						w = q->value;
 
-						SaveMalloc((void *)c, l + strlen(w->value) + 4, "new property value");
+						SaveMalloc(char *, c, l + strlen(w->value) + 4, "new property value");
 
 						strcpy(c, v->value);
 						strcpy(c+l+2, w->value);
@@ -688,7 +688,7 @@ void Init_TreeInfo(struct Node *r)
 	struct TreeInfo *ti;
 	struct Property *ff, *gm, *sz;
 
-	SaveMalloc((void *)ti, sizeof(struct TreeInfo), "tree info structure");
+	SaveMalloc(struct TreeInfo *, ti, sizeof(struct TreeInfo), "tree info structure");
 
 	ti->FF = 0;						/* Init structure */
 	ti->GM = 0;
@@ -813,7 +813,7 @@ void Check_SGFTree(struct Node *r, struct BoardStatus *old)
 	struct Node *n;
 	struct BoardStatus *st;
 
-	SaveMalloc((void *)st, sizeof(struct BoardStatus), "board status buffer");
+	SaveMalloc(struct BoardStatus *, st, sizeof(struct BoardStatus), "board status buffer");
 	st->board = NULL;
 	st->markup = NULL;
 
@@ -825,12 +825,12 @@ void Check_SGFTree(struct Node *r, struct BoardStatus *old)
 
 			if(st->bsize)
 			{
-				SaveMalloc((void *)st->board, st->bsize, "goban buffer");
+				SaveMalloc(char *, st->board, st->bsize, "goban buffer");
 				memcpy(st->board, old->board, st->bsize);
 			}
 
 			if(st->msize)
-				SaveMalloc((void *)st->markup, st->msize, "markup buffer");
+				SaveMalloc(USHORT *, st->markup, st->msize, "markup buffer");
 
 			st->mrkp_chngd = TRUE;
 		}
@@ -843,13 +843,13 @@ void Check_SGFTree(struct Node *r, struct BoardStatus *old)
 			st->bsize = st->bwidth * sgfc->info->bheight * sizeof(char);
 			if(st->bsize)
 			{
-				SaveMalloc((void *)st->board, st->bsize, "goban buffer");
+				SaveMalloc(char *, st->board, st->bsize, "goban buffer");
 				memset(st->board, 0, st->bsize);
 			}
 
 			st->msize = st->bwidth * sgfc->info->bheight * sizeof(USHORT);
 			if(st->msize)
-				SaveMalloc((void *)st->markup, st->msize, "markup buffer");
+				SaveMalloc(USHORT *, st->markup, st->msize, "markup buffer");
 			st->mrkp_chngd = TRUE;
 		}
 

@@ -148,4 +148,4 @@ void Strict_Checking(struct SGFInfo *sgf);
 #define Enqueue(h,n) f_Enqueue((struct ListHead *)(h), (struct ListNode *)(n))
 #define Delete(h,n) f_Delete((struct ListHead *)(h), (struct ListNode *)(n))
 
-#define SaveMalloc(v, sz, err)	{ v = malloc((size_t)(sz)); if(!v) PrintError(FE_OUT_OF_MEMORY, err); }
+#define SaveMalloc(type, v, sz, err)	{ v = (type)malloc((size_t)(sz)); if(!v) PrintError(FE_OUT_OF_MEMORY, err); }
