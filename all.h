@@ -16,10 +16,6 @@
 						** compiler clean up anyway (which is much faster)
 						*/
 
-#define VERSION_UNIX				/* Mutual exclusiv defines */
-/* #define VERSION_MAC		*/		/* for generating machine dependent code */
-/* #define VERSION_MSDOS	*/		/* see README for details */
-
 /* #define VERSION_NO_MAIN */		/* In case you've written a new main()
 									** e.g. for writing a mouse-interface
 									** (drag & drop shell)
