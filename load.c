@@ -335,8 +335,8 @@ struct Property *Add_Property(struct Node *n, token id, char *id_buf, char *idst
 
 int NewProperty(struct Node *n, token id, char *id_buf, char *idstr)
 {
-	int ret = TRUE;
 	struct Property *newp;
+	int ret = TRUE, toomany = FALSE;
 
 	if(!n)	return(TRUE);
 
@@ -358,9 +358,14 @@ int NewProperty(struct Node *n, token id, char *id_buf, char *idstr)
 		{
 			if(newp->flags & PVT_LIST)
 				continue;
-			else
+			else					/* error, as only one value allowed */
 			{
-				PrintError(E_TOO_MANY_VALUES, sgfc->current, idstr);
+				toomany = TRUE;
+				if (!strlen(newp->value->value))	/* if previous value is empty, */
+				{									/* then use the later value */
+					Del_PropValue(newp, newp->value);
+					continue;
+				}
 				SkipValues(FALSE);
 				break;
 			}
@@ -368,6 +373,9 @@ int NewProperty(struct Node *n, token id, char *id_buf, char *idstr)
 		else						/* reached end of value list */
 			break;
 	}
+
+	if (toomany)
+		PrintError(E_TOO_MANY_VALUES, sgfc->current, idstr);
 
 	if(!newp->value)				/* property has values? */
 		Del_Property(n, newp);		/* no -> delete it */
