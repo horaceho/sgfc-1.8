@@ -108,7 +108,8 @@ const char *error_mesg[] =
 	"FF4 style pass value '[]' in older format found (corrected)\n",
 /*65 */
 	"node outside variation found. Missing '(' assumed.\n",
-	"illegal chars after variation start '(' found. Missing ';' assumed.\n"
+	"illegal chars after variation start '(' found. Missing ';' assumed.\n",
+	"unknown command line option '%s' (-h for help)\n"
 };
 
 

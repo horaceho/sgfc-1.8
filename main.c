@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 main.c
 ***
-*** Copyright (C) 1996-2004 by Arno Hollosi
+*** Copyright (C) 1996-2005 by Arno Hollosi
 ***
 *** Copyright notice:
 ***
@@ -68,7 +68,7 @@ void PrintHelp(int everything)
 {
 	puts(
 		" SGFC V1.15  - Smart Game Format Syntax Checker & Converter\n"
-		"               Copyright (C) 1996-2004 by Arno Hollosi\n"
+		"               Copyright (C) 1996-2005 by Arno Hollosi\n"
 		"               EMail: <ahollosi@xmp.net>\n"
 		" ----------------------------------------------------------");
 
@@ -195,6 +195,20 @@ int ParseArgs(int argc, char *argv[])
 									break;
 						case 'h':	PrintHelp(TRUE);
 									return(FALSE);
+						case '-':	/* long options */
+									c++;
+									if(!strncmp(c, "help", 4))
+									{
+										PrintHelp(TRUE);
+										return(FALSE);
+									}
+									if(!strncmp(c, "version", 7))
+									{
+										PrintHelp(FALSE);
+										return(FALSE);
+									}
+									PrintError(FE_UNKNOWN_LONG_OPTION, c);
+									break;
 						default:	PrintError(FE_UNKNOWN_OPTION, *c);
 									break;
 					}
