@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 save.c
 ***
-*** Copyright (C) 1996-2003 by Arno Hollosi
+*** Copyright (C) 1996-2004 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -233,7 +233,7 @@ void SetRootProps(struct TreeInfo *info, struct Node *r)
 		return;
 
 	New_PropValue(r, TKN_FF, "4", NULL, TRUE);
-	New_PropValue(r, TKN_AP, "SGFC", "1.14", TRUE);
+	New_PropValue(r, TKN_AP, "SGFC", "1.15", TRUE);
 
 	if(info->GM == 1)			/* may be default value without property */
 		New_PropValue(r, TKN_GM, "1", NULL, TRUE);

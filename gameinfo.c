@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 gameinfo.c
 ***
-*** Copyright (C) 1996-2003 by Arno Hollosi
+*** Copyright (C) 1996-2004 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/

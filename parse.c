@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 parse.c
 ***
-*** Copyright (C) 1996-2003 by Arno Hollosi
+*** Copyright (C) 1996-2004 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -207,10 +207,17 @@ int Parse_Move(char *value, USHORT pos)
 		ret = -1;
 
 	if(!strlen(value))				/* empty value? */
-		if(sgfc->info->FF >= 4 && !pos)
-			return(ret);
+    {
+		if(!pos)
+		{
+			if(sgfc->info->FF >= 4)
+				return(ret);
+			else					/* new pass '[]' in old FF[1-3] */
+				return(-101);		/* possible cause: missing FF   */
+		}
 		else
 			return(0);
+    }
 
 	if(strlen(value) != 2)			/* value too long? */
 	{
@@ -426,6 +433,9 @@ int Check_Value(struct Property *p, struct PropValue *v, USHORT flags,
 {
 	switch((*Parse_Value)(v->value, flags))
 	{
+		case -101:	/* special case for Parse_Move */
+					PrintError(E_FF4_PASS_IN_OLD_FF, v->buffer);
+					break;
 		case -1:	PrintError(E_BAD_VALUE_CORRECTED, v->buffer, p->idstr, v->value);
 					break;
 		case 0:		PrintError(E_BAD_VALUE_DELETED, v->buffer, p->idstr);
@@ -698,9 +708,9 @@ void Check_Properties(struct Node *n, struct BoardStatus *st)
 			 (p->id != TKN_KI))
 		{
 			if(sgf_token[p->id].data & ST_OBSOLETE)
-				PrintError(W_PROPERTY_NOT_IN_FF, p->buffer, p->idstr, sgfc->info->FF, "converted");
+				PrintError(WS_PROPERTY_NOT_IN_FF, p->buffer, p->idstr, sgfc->info->FF, "converted");
 			else
-				PrintError(W_PROPERTY_NOT_IN_FF, p->buffer, p->idstr, sgfc->info->FF, "parsing done anyway");
+				PrintError(WS_PROPERTY_NOT_IN_FF, p->buffer, p->idstr, sgfc->info->FF, "parsing done anyway");
 		}
 
 		if(!option_keep_obsolete_props && !(sgf_token[p->id].ff & FF4) &&

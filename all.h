@@ -3,7 +3,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 all.h
 ***
-*** Copyright (C) 1996-2003 by Arno Hollosi
+*** Copyright (C) 1996-2004 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 *** Notes:	global definition of all #defines and structures
@@ -107,6 +107,8 @@ typedef enum {
 
 #define MAX_BOARDSIZE	52
 
+#define MAX_REORDER_VARIATIONS 100
+
 
 struct BoardStatus
 {
@@ -175,6 +177,8 @@ struct TreeInfo
 	int GM;				/* Type of game */
 	int bwidth;			/* Board width  */
 	int bheight;		/* Board height */
+
+	struct Node *root;	/* root node of this tree */
 };
 
 
@@ -187,7 +191,7 @@ struct SGFInfo
 	struct TreeInfo *last;
 	struct TreeInfo *info;	/* pointer to info for current GameTree */
 
-	struct Node *root;	/* root node (tree) */
+	struct Node *root;	/* first root node (tree) */
 
 	char *name;			/* file name */
 	FILE *file;			/* file handle */
@@ -242,6 +246,7 @@ struct SGFToken
 #define WARNING			0x10000000L
 #define ERROR4			0x01000000L	/* error for FF[4] / warning otherwise */
 #define CRITICAL		0x02000000L
+#define WARNING_STRICT	0x04000000L /* error if strict checking, else warning */
 #define ERROR_TYPE		0x70000000L
 #define ERROR_NUM		0x00000fffL
 #define E_VALUE			0x00010000L
@@ -280,13 +285,13 @@ struct SGFToken
 #define E_EMPTY_VALUE_DELETED	(17 | ERROR | SEARCH_POS)
 #define W_EMPTY_VALUE_DELETED	(17 | WARNING | SEARCH_POS)
 #define E_BAD_ROOT_PROP			(18 | ERROR | SEARCH_POS)
-#define W_GAME_NOT_GO			(19 | WARNING | CRITICAL | SEARCH_POS)
+#define WCS_GAME_NOT_GO			(19 | WARNING_STRICT | CRITICAL | SEARCH_POS)
 #define E_NO_PROP_VALUES		(20 | ERROR | CRITICAL | SEARCH_POS)
 
 #define E_VARIATION_START		(21 | ERROR | CRITICAL | SEARCH_POS)
 #define W_CTRL_BYTE_DELETED		(22 | WARNING | SEARCH_POS)
 #define E_COMPOSE_EXPECTED		(23 | ERROR | SEARCH_POS | E_VALUE)
-#define W_MOVE_IN_ROOT			(24 | WARNING | SEARCH_POS)
+#define WS_MOVE_IN_ROOT			(24 | WARNING_STRICT | SEARCH_POS)
 #define E_BAD_COMPOSE_CORRECTED	(25 | ERROR | SEARCH_POS | E_VALUE)
 #define FE_DEST_FILE_OPEN		(26 | FATAL_ERROR | E_ERRNO)
 #define FE_DEST_FILE_WRITE		(27 | FATAL_ERROR | E_ERRNO)
@@ -294,22 +299,22 @@ struct SGFToken
 #define W_PROPERTY_DELETED		(29 | WARNING | SEARCH_POS)
 #define E4_MOVE_SETUP_MIXED		(30 | ERROR4  | SEARCH_POS)
 
-#define W_LONG_PROPID			(31 | WARNING | SEARCH_POS)
+#define WS_LONG_PROPID			(31 | WARNING_STRICT | SEARCH_POS)
 #define E_ROOTP_NOT_IN_ROOTN	(32 | ERROR | SEARCH_POS)
 #define E4_FAULTY_GC			(33 | ERROR4 | SEARCH_POS | E_VALUE)
 #define E_CRITICAL_NOT_SAVED	(34 | ERROR)
-#define W_UNKNOWN_PROPERTY		(35 | WARNING | SEARCH_POS)
+#define WS_UNKNOWN_PROPERTY		(35 | WARNING_STRICT | SEARCH_POS)
 #define E_MISSING_SEMICOLON		(36 | ERROR | CRITICAL | SEARCH_POS)
 #define E_TWO_MOVES_IN_NODE		(37 | ERROR | SEARCH_POS)
 #define E_POSITION_NOT_UNIQUE	(38 | ERROR | SEARCH_POS | E_VALUE | E_DEL_DOUBLE)
-#define W_ADDSTONE_REDUNDANT	(39 | WARNING | SEARCH_POS | E_DEL_DOUBLE)
-#define W_PROPERTY_NOT_IN_FF	(40 | WARNING | SEARCH_POS)
+#define WS_ADDSTONE_REDUNDANT	(39 | WARNING_STRICT|SEARCH_POS|E_DEL_DOUBLE)
+#define WS_PROPERTY_NOT_IN_FF	(40 | WARNING_STRICT | SEARCH_POS)
 
 #define E_ANNOTATE_NOT_UNIQUE	(41 | ERROR | SEARCH_POS)
 #define E4_BM_TE_IN_NODE		(42 | ERROR4 | SEARCH_POS)
 #define E_ANNOTATE_WITHOUT_MOVE (43 | ERROR | SEARCH_POS)
 #define E4_GINFO_ALREADY_SET	(44 | ERROR4 | SEARCH_POS)
-#define W_ROOT_PROP_DIFFERS		(45 | WARNING | SEARCH_POS)
+#define WS_ROOT_PROP_DIFFERS	(45 | WARNING_STRICT | SEARCH_POS)
 #define FE_UNKNOWN_FILE_FORMAT	(46 | FATAL_ERROR | SEARCH_POS)
 #define E_SQUARE_AS_RECTANGULAR	(47 | ERROR | SEARCH_POS)
 #define FE_MISSING_SOURCE_FILE	(48 | FATAL_ERROR)
@@ -323,7 +328,16 @@ struct SGFToken
 #define W_EMPTY_NODE_DELETED	(55 | WARNING | SEARCH_POS)
 #define W_VARLEVEL_UNCERTAIN	(56 | WARNING | SEARCH_POS)
 #define W_VARLEVEL_CORRECTED	(57 | WARNING | SEARCH_POS)
-#define W_ILLEGAL_MOVE			(58 | WARNING | SEARCH_POS)
+#define WS_ILLEGAL_MOVE			(58 | WARNING_STRICT | SEARCH_POS)
 #define W_INT_KOMI_FOUND		(59 | WARNING | SEARCH_POS)
 
-#define MAX_ERROR_NUM			59
+#define E_MORE_THAN_ONE_TREE	(60 | ERROR)
+#define W_HANDICAP_NOT_SETUP	(61 | WARNING | SEARCH_POS)
+#define W_SETUP_AFTER_ROOT		(62 | WARNING | SEARCH_POS)
+#define W_MOVE_OUT_OF_SEQUENCE	(63 | WARNING | SEARCH_POS)
+#define E_TOO_MANY_VARIATIONS	(64 | ERROR | SEARCH_POS)
+#define E_FF4_PASS_IN_OLD_FF	(65 | ERROR | SEARCH_POS)
+#define E_NODE_OUSIDE_VAR		(66 | ERROR | CRITICAL | SEARCH_POS)
+#define E_MISSING_NODE_START	(67 | ERROR | CRITICAL | SEARCH_POS)
+
+#define MAX_ERROR_NUM			67

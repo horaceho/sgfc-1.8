@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 protos.h
 ***
-*** Copyright (C) 1996-2003 by Arno Hollosi
+*** Copyright (C) 1996-2004 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -28,6 +28,8 @@ extern char option_findstart;
 extern char option_pass_tt;
 extern char option_fix_variation;
 extern char option_game_signature;
+extern char option_strict_checking;
+extern char option_reorder_variations;
 extern char *option_infile;
 extern char *option_outfile;
 

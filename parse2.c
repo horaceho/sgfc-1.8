@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 parse.c
 ***
-*** Copyright (C) 1996-2003 by Arno Hollosi
+*** Copyright (C) 1996-2004 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -313,7 +313,7 @@ void Correct_Variations(struct Node *r, struct TreeInfo *ti)
 		if(Find_Property(r, TKN_B) || Find_Property(r, TKN_W))
 		{
 			Split_Node(r, TYPE_ROOT|TYPE_GINFO, TKN_NONE, FALSE);
-			PrintError(W_MOVE_IN_ROOT, r->buffer);
+			PrintError(WS_MOVE_IN_ROOT, r->buffer);
 		}
 	}
 
@@ -340,6 +340,57 @@ void Correct_Variations(struct Node *r, struct TreeInfo *ti)
 		r = r->child;
 	}
 
+	return;
+}
+
+
+/**************************************************************************
+*** Function:	Reorder_Variations
+***				Reorders variations (including main branch) from A,B,C to C,B,A
+*** Parameters: r ... start node
+*** Returns:	-
+**************************************************************************/
+
+void Reorder_Variations(struct Node *r)
+{
+	struct Node *n, *s[MAX_REORDER_VARIATIONS];
+	int i;
+
+	if(!r)
+		return;
+
+	if (!r->parent && r->sibling)
+		Reorder_Variations(r->sibling);
+
+	while(r)
+	{
+		if(r->child && r->child->sibling)
+		{
+			i = 0;
+			n = r->child;
+			while(n)
+			{
+				if(i >= MAX_REORDER_VARIATIONS)
+				{
+					PrintError(E_TOO_MANY_VARIATIONS, n->buffer);
+					break;
+				}
+				s[i++] = n;
+				Reorder_Variations(n);
+				n = n->sibling;
+			}
+			if(i < MAX_REORDER_VARIATIONS)
+			{
+				i--;
+				s[0]->sibling = NULL;
+				s[0]->parent->child = s[i];
+				for(; i > 0; i--)
+					s[i]->sibling = s[i-1];
+			}
+			break;
+		}
+		r = r->child;
+	}
 	return;
 }
 
@@ -642,6 +693,7 @@ void Init_TreeInfo(struct Node *r)
 	ti->FF = 0;						/* Init structure */
 	ti->GM = 0;
 	ti->bwidth = ti->bheight = 0;
+	ti->root = r;
 	if(sgfc->last)
 		ti->num = sgfc->last->num + 1;
 	else
@@ -720,7 +772,7 @@ void Init_TreeInfo(struct Node *r)
 			ti->bwidth = ti->bheight = 19;	/* default size */
 	}
 	else
-		PrintError(W_GAME_NOT_GO, gm->buffer, ti->num);
+		PrintError(WCS_GAME_NOT_GO, gm->buffer, ti->num);
 
 	if(ti->prev)
 	{
@@ -731,7 +783,7 @@ void Init_TreeInfo(struct Node *r)
 			if(ff)	buffer = ff->buffer;
 			else	buffer = r->buffer;
 
-			PrintError(W_ROOT_PROP_DIFFERS, buffer, "file formats");
+			PrintError(WS_ROOT_PROP_DIFFERS, buffer, "file formats");
 			FF_diff = 1;
 		}
 
@@ -740,7 +792,7 @@ void Init_TreeInfo(struct Node *r)
 			if(gm)	buffer = gm->buffer;
 			else	buffer = r->buffer;
 
-			PrintError(W_ROOT_PROP_DIFFERS, buffer, "game types");
+			PrintError(WS_ROOT_PROP_DIFFERS, buffer, "game types");
 			GM_diff = 1;
 		}
 	}
@@ -854,6 +906,12 @@ void ParseSGF(struct SGFInfo *sgf)
 	if(option_del_empty_nodes)
 		Del_EmptyNodes(sgfc->root);
 
+	if(option_reorder_variations)
+		Reorder_Variations(sgfc->root);
+
 	if(option_game_signature)
 		Calc_GameSig(sgfc->root, sgfc->tree);
+
+	if(option_strict_checking)
+		Strict_Checking(sgfc);
 }

@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 main.c
 ***
-*** Copyright (C) 1996-2003 by Arno Hollosi
+*** Copyright (C) 1996-2004 by Arno Hollosi
 ***
 *** Copyright notice:
 ***
@@ -16,7 +16,7 @@
 *** The author can be reached at <ahollosi@xmp.net>
 ***
 ***		Arno Hollosi
-***		Oberndorf 313
+***		Sonnbichlstrasse 50
 ***		A-6322 Kirchbichl
 ***		Austria (Europe)
 ***
@@ -58,6 +58,8 @@ char option_pass_tt = FALSE;
 char option_fix_variation = FALSE;
 char option_findstart = 1;
 char option_game_signature = FALSE;
+char option_strict_checking = FALSE;
+char option_reorder_variations = FALSE;
 char *option_infile = NULL;
 char *option_outfile = NULL;
 
@@ -70,8 +72,8 @@ char *option_outfile = NULL;
 void PrintHelp(int everything)
 {
 	puts(
-		" SGFC V1.14  - Smart Game Format Syntax Checker & Converter\n"
-		"               Copyright (C) 1996-2003 by Arno Hollosi\n"
+		" SGFC V1.15  - Smart Game Format Syntax Checker & Converter\n"
+		"               Copyright (C) 1996-2004 by Arno Hollosi\n"
 		"               EMail: <ahollosi@xmp.net>\n"
 		" ----------------------------------------------------------");
 
@@ -88,8 +90,8 @@ void PrintHelp(int everything)
 		"    -dn ... n = number : disable message number -n-\n"
 		"    -e  ... expand compressed point lists\n"
 		"    -g  ... print game signature (Go GM[1] games only)\n"
-		"    -k  ... keep header in front of SGF data\n"
 		"    -i  ... interactive mode (faulty game-info values only)\n"
+		"    -k  ... keep header in front of SGF data\n"
 		"    -lx ... x = 1,2,3,4: a hard linebreak is\n"
 		"              1 - any linebreak encountered (default)\n"
 		"              2 - any linebreak not preceeded by a space (MGT)\n"
@@ -99,12 +101,14 @@ void PrintHelp(int everything)
 		"    -n  ... delete empty nodes\n"
 		"    -o  ... delete obsolete properties\n"
 		"    -p  ... write pass moves as '[tt]' if possible\n"
+		"    -r  ... restrictive checking\n"
 		"    -s  ... split game collection into single files\n"
 		"    -t  ... don't insert any soft linebreaks into text values\n"
 		"    -u  ... delete unknown properties\n"
 		"    -v  ... correct variation level and root moves\n"
 		"    -w  ... disable warning messages\n"
-		"    -yP ... delete property P (P = property id)"
+		"    -yP ... delete property P (P = property id)\n"
+		"    -z  ... reverse ordering of variations"
 		);
 	else
 		puts(" 'sgfc -h' for help on options");
@@ -155,6 +159,8 @@ int ParseArgs(int argc, char *argv[])
 						case 'v':	option_fix_variation = TRUE;		break;
 						case 'i':	option_interactive = TRUE;			break;
 						case 'g':	option_game_signature = TRUE;		break;
+						case 'r':	option_strict_checking = TRUE;		break;
+						case 'z':	option_reorder_variations = TRUE;	break;
 						case 'd':	c++; hlp = c;
 									n = (int)strtol(c, &c, 10);
 									if(n < 1 || n > MAX_ERROR_NUM)

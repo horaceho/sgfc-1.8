@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 load.c
 ***
-*** Copyright (C) 1996-2003 by Arno Hollosi
+*** Copyright (C) 1996-2004 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 *** Notes:	Almost all routines in this file return either
@@ -437,7 +437,7 @@ int MakeProperties(struct Node *n)
 							}
 
 							if(i > 2)
-								PrintError(W_LONG_PROPID, sgfc->current, propid);
+								PrintError(WS_LONG_PROPID, sgfc->current, propid);
 
 							for(i = 1; sgf_token[i].id; i++)
 								if(!strcmp(propid, sgf_token[i].id))
@@ -447,14 +447,14 @@ int MakeProperties(struct Node *n)
 							{
 								if(!option_keep_unknown_props)
 								{
-									PrintError(W_UNKNOWN_PROPERTY, id, propid, "deleted");
+									PrintError(WS_UNKNOWN_PROPERTY, id, propid, "deleted");
 									if(!SkipValues(TRUE))
 										return(FALSE);
 									break;
 								}
 								else
 								{
-									PrintError(W_UNKNOWN_PROPERTY, id, propid, "found");
+									PrintError(WS_UNKNOWN_PROPERTY, id, propid, "found");
 									i = TKN_UNKNOWN;
 								}
 							}
@@ -582,7 +582,13 @@ int BuildSGFTree(struct Node *r)
 		switch(*(sgfc->current-1))
 		{
 			case ';':	if(end_tree)
-							PrintError(E_ILLEGAL_OUTSIDE_CHAR, sgfc->current-1, TRUE);
+						{
+							PrintError(E_NODE_OUSIDE_VAR, sgfc->current-1);
+							sgfc->current--;
+							if(!BuildSGFTree(r))
+								return(FALSE);
+							end_tree = 1;
+						}
 						else
 						{
 							empty = 0;
@@ -604,7 +610,17 @@ int BuildSGFTree(struct Node *r)
 							PrintError(E_EMPTY_VARIATION, sgfc->current-1);
 						return(TRUE);
 
-			default:	PrintError(E_ILLEGAL_OUTSIDE_CHAR, sgfc->current-1, TRUE);
+			default:	if(empty)		/* assume there's a missing ';' */
+						{
+							PrintError(E_MISSING_NODE_START, sgfc->current-1);
+							empty = 0;
+							sgfc->current--;
+							r = NewNode(r, FALSE);
+							if(!r)
+								return(FALSE);
+						}
+						else
+							PrintError(E_ILLEGAL_OUTSIDE_CHAR, sgfc->current-1, TRUE);
 						break;
 		}
 	}

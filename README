@@ -1,7 +1,7 @@
-SGF Syntax Checker & Converter: SGFC V1.14
+SGF Syntax Checker & Converter: SGFC V1.15
 ==========================================
 
-SGFC Copyright (C) 1996-2003 by Arno Hollosi <ahollosi@xmp.net>
+SGFC Copyright (C) 1996-2004 by Arno Hollosi <ahollosi@xmp.net>
 
 SGFC is open source software and is published under the terms of the
 BSD License. Read 'COPYING' for more information.
@@ -72,7 +72,7 @@ send an email to <ahollosi@xmp.net>.
 
 Please include:
   - the version number of SGFC (just invoke 'sgfc' without parameters)
-  - which operating system you're using
+  - which operating system you are using
   - a short SGF file, where the error occurs
 
 
@@ -91,12 +91,15 @@ properties.c  contains the array sgf_token[] which defines all properties
               and their features
 parse.c       contains syntax and semantic checks for property values
 parse2.c      contains parsing of node and property structure
+              and additional functions (fix variations, calculate game
+              signature, delete empty nodes, ...)
 gameinfo.c    contains parsing and correcting of game-info properties.
               (includes functions for interactive mode)
 execute.c     contains routines that actually execute the properties,
               e.g. play the game on a board capture stones etc.
               This is used to detect more sophisticated errors and to do
               necessary transformations
+strict.c      contains the functions for restrictive checking (option -r)
 util.c        misc. functions; error messages
 test.sgf      a SGF file to test all messages of SGFC
 Makefile      Makefile as used for gcc on my Amiga and on an AIX Unix system
@@ -210,12 +213,14 @@ Conversion to FF[4] takes place only if you specify the 'outfile'.
     -n  ... delete empty nodes
     -o  ... delete obsolete properties
     -p  ... write pass moves as '[tt]' if possible
+    -r  ... restrictive checking
     -s  ... split game collection into single files
     -t  ... don't insert any soft linebreaks into text values
     -u  ... delete unknown properties
     -v  ... correct variation level and root moves
     -w  ... disable warning messages
     -yP ... delete property P (P = property id)
+    -z  ... reverse ordering of variations
 
 
 4.2 Examples:
@@ -430,6 +435,21 @@ you should avoid the new format and specify this option.
 If the board is bigger than 19x19 this option is ignored.
 
 
+Option -r:
+----------
+Enable restrictive checking.
+
+If this option is set then SGFC is even more pedantic than usual.
+It is designed to flag all kind of bad style or uncommon characteristics
+that can cause problems with applications just able to deal with common
+cases. For example, if the SGF file contains more than one game tree SGFC
+now issues an error instead of a warning.
+
+Furthermore for Go GM[1] games it is checked that no two successive moves
+have the same color, that not setup (AB/AW/AE) occurs in the main branch
+apart from the root node, and that the HA property is set correctly.
+
+
 Option -s:
 ----------
 Split game collection into single files.
@@ -499,6 +519,19 @@ This option allows you to delete specific properties.
 You have to add the property id as listed in 'Appendix C: Known Properties'.
 
 Right now only properties known to SGFC may be deleted by using this option.
+
+
+Option -z:
+----------
+Reverse ordering of variations.
+
+This option fixes bad style SGF files, where the main line of the game
+is not in the main branch (variation 'A'), but instead is the last
+variation. Effectively, variations A,B,C,D are reordered as D,C,B,A.
+
+The function cannot reorder more than 100 variations of a single node.
+If this limit is too low for you, then you need to set
+MAX_REORDER_VARIATIONS in all.h to a higher value and recompile SGFC.
 
 
 
@@ -596,6 +629,16 @@ to read in this file :-)
 
 Appendix B: History
 ===================
+
+V1.15 (2004-01-18)
+------------------
+
+- added option -r (restrictive checking)
+- added option -z (reorder variations)
+- Go: FF4 style pass moves '[]' in old FF formats are now corrected (error 65)
+- tries to be more forgiving of missing ';' and missing '(' characters.
+  See examples for error 66 and 67.
+
 
 V1.14 (2003-06-09)
 ------------------
@@ -994,4 +1037,29 @@ Classes:
         Example: >>(;GM[1];B[aa];W[aa])<<
 
 59:W    "obsolete <KI> property found: %s" (converted / deleted)
-		Example: >>(;(;KI[11])(;KM[3.5]KI[7]))<<
+        Example: >>(;(;KI[11])(;KM[3.5]KI[7]))<<
+
+60:E    "file contains more than one game tree"
+        Example: >>(;GM[1])(;GM[1])<< and check with command line option '-r'
+
+61:W    "value of HA property differs from number of setup stones"
+        Example: >>(;GM[1]AB[aa][bb])(;GM[1]HA[3];B[bb])<< and check with '-r'
+
+62:W    "setup stones in main line found (outside root node)"
+        Example: >>(;GM[1];W[cc];AB[aa]AE[cc])<< and check with '-r'
+
+63:W    "two successive moves have the same color"
+        Example: >>(;GM[1];B[dd];W[cc];W[dd])<< and check with '-r'
+
+64:E    "can not reorder variations: too many variations"
+        Example: create a file with more than 100 variations of one move.
+
+65:E    "FF4 style pass value '[]' in older format found (corrected)"
+        Example: >>(;GM[1]FF[3];B[])(;GM[1];B[])<<
+
+66:E-C  "node outside variation found. Missing '(' assumed."
+        Example: >>(;FF[4];C[var 1]) ;C[var 2]))<<
+
+67:E-C  "illegal chars after variation start '(' found. Missing ';' assumed."
+        Example: >>(;FF[4];C[var 1]) (C[var 2]))<<
+

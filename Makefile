@@ -26,7 +26,7 @@ CFLAGS = $(CODEGEN) $(OPTIMIZATION) $(OPTIONS)
 
 LIB = 
 
-OBJ = execute.o properties.o parse.o parse2.o \
+OBJ = execute.o properties.o parse.o parse2.o strict.o\
 	load.o util.o main.o save.o gameinfo.o
 
 ARCHIVE = 
@@ -51,6 +51,9 @@ parse.o: parse.c all.h protos.h
 
 parse2.o: parse2.c all.h protos.h 
 	$(CC) $(CFLAGS) $(INCL) -c parse2.c
+
+strict.o: strict.c all.h protos.h 
+	$(CC) $(CFLAGS) $(INCL) -c strict.c
 
 load.o: load.c all.h protos.h 
 	$(CC) $(CFLAGS) $(INCL) -c load.c

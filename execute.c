@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 execute.c
 ***
-*** Copyright (C) 1996-2003 by Arno Hollosi
+*** Copyright (C) 1996-2004 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -141,7 +141,7 @@ int Do_Move(struct Node *n, struct Property *p, struct BoardStatus *st)
 	color = sgf_token[p->id].data;
 
 	if(st->board[MXY(x,y)])
-		PrintError(W_ILLEGAL_MOVE, p->buffer);
+		PrintError(WS_ILLEGAL_MOVE, p->buffer);
 
 	st->board[MXY(x,y)] = color;
 	Capture_Stones(st, color, x-1, y);		/* check for prisoners */
@@ -215,7 +215,7 @@ int Do_Addstones(struct Node *n, struct Property *p, struct BoardStatus *st)
 
 	if(h.value)
 	{
-		x = PrintError(W_ADDSTONE_REDUNDANT, p->buffer, p->idstr);
+		x = PrintError(WS_ADDSTONE_REDUNDANT, p->buffer, p->idstr);
 
 		v = h.value;
 		while(v)

@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 util.c
 ***
-*** Copyright (C) 1996-2003 by Arno Hollosi
+*** Copyright (C) 1996-2004 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -98,7 +98,17 @@ const char *error_mesg[] =
 	"possible incorrect variation level can't be corrected\n",
 	"variation level corrected\n",
 	"forbidden move found (played on a point occupied by another stone)\n",
-	"obsolete <KI> property found: %s\n"
+	"obsolete <KI> property found: %s\n",
+	"file contains more than one game tree\n",
+/* 60 */
+	"value of HA property differs from number of setup stones\n",
+	"setup stones in main line found (outside root node)\n",
+	"two successive moves have the same color\n",
+	"can not reorder variations: too many variations\n",
+	"FF4 style pass value '[]' in older format found (corrected)\n",
+/*65 */
+	"node outside variation found. Missing '(' assumed.\n",
+	"illegal chars after variation start '(' found. Missing ';' assumed.\n"
 };
 
 
@@ -168,6 +178,9 @@ int PrintError(ULONG type, ...)
 
 	if(type & ERROR4)
 		if(sgfc->info->FF >= 4)		type |= ERROR;
+		else						type |= WARNING;
+	if(type & WARNING_STRICT)
+		if(option_strict_checking)	type |= ERROR;
 		else						type |= WARNING;
 
 	if((!error_enabled[(type & ERROR_NUM)-1] && !(type & FATAL_ERROR)
