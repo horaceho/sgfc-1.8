@@ -214,30 +214,30 @@ struct PropValue *Add_PropValue(struct Property *p, char *buffer,
 								char *value, long size,
 								char *value2, long size2)
 {
-	struct PropValue *new;
+	struct PropValue *newv;
 
-	SaveMalloc(new, sizeof(struct PropValue), "property value structure");
+	SaveMalloc((void *)newv, sizeof(struct PropValue), "property value structure");
 
 	if(size < 0)	size  = strlen(value);
 
 	/* +2 because Parse_Float may add 1 char and for trailing '\0' byte */
-	SaveMalloc(new->value, size+2, "property value buffer");
-	CopyValue(new->value, value, size, TRUE);		/* copy value */
+	SaveMalloc((void *)newv->value, size+2, "property value buffer");
+	CopyValue(newv->value, value, size, TRUE);		/* copy value */
 
 	if(value2)
 	{
 		if(size2 < 0)	size2 = strlen(value2);
 
-		SaveMalloc(new->value2, size2+2, "property value2 buffer");
-		CopyValue(new->value2, value2, size2, TRUE);
+		SaveMalloc((void *)newv->value2, size2+2, "property value2 buffer");
+		CopyValue(newv->value2, value2, size2, TRUE);
 	}
 	else
-		new->value2 = NULL;
+		newv->value2 = NULL;
 
-	new->buffer = buffer;
+	newv->buffer = buffer;
 
-	AddTail(&p->value, new);				/* add value to property */
-	return(new);
+	AddTail(&p->value, newv);				/* add value to property */
+	return(newv);
 }
 
 
@@ -294,32 +294,32 @@ int NewValue(struct Property *p, USHORT flags)
 
 struct Property *Add_Property(struct Node *n, token id, char *id_buf, char *idstr)
 {
-	struct Property *new;
+	struct Property *newp;
 	char *str;
 
-	SaveMalloc(new, sizeof(struct Property), "property structure");
+	SaveMalloc((void *)newp, sizeof(struct Property), "property structure");
 
-	new->id = id;							/* init property structure */
+	newp->id = id;							/* init property structure */
 
 	if(id == TKN_UNKNOWN)
 	{
-		SaveMalloc(str, strlen(idstr)+2, "ID string");
+		SaveMalloc((void *)str, strlen(idstr)+2, "ID string");
 		strcpy(str, idstr);
-		new->idstr = str;
+		newp->idstr = str;
 	}
 	else
-		new->idstr = sgf_token[id].id;
+		newp->idstr = sgf_token[id].id;
 
-	new->priority = sgf_token[id].priority;
-	new->flags = sgf_token[id].flags;		/* local copy */
-	new->buffer = id_buf;
+	newp->priority = sgf_token[id].priority;
+	newp->flags = sgf_token[id].flags;		/* local copy */
+	newp->buffer = id_buf;
 
-	new->value = NULL;
-	new->valend = NULL;
+	newp->value = NULL;
+	newp->valend = NULL;
 
 	if(n)
-		Enqueue(&n->prop, new);				/* add to node (sorted!) */
-	return(new);
+		Enqueue(&n->prop, newp);				/* add to node (sorted!) */
+	return(newp);
 }
 
 
@@ -335,16 +335,16 @@ struct Property *Add_Property(struct Node *n, token id, char *id_buf, char *idst
 
 int NewProperty(struct Node *n, token id, char *id_buf, char *idstr)
 {
-	struct Property *new;
 	int ret = TRUE;
+	struct Property *newp;
 
 	if(!n)	return(TRUE);
 
-	new = Add_Property(n, id, id_buf, idstr);
+	newp = Add_Property(n, id, id_buf, idstr);
 
 	while(TRUE)
 	{
-		if(!NewValue(new, new->flags))	/* add value */
+		if(!NewValue(newp, newp->flags))	/* add value */
 		{
 			ret = FALSE;	break;
 		}
@@ -356,7 +356,7 @@ int NewProperty(struct Node *n, token id, char *id_buf, char *idstr)
 
 		if(*sgfc->current == '[')	/* more than one value? */
 		{
-			if(new->flags & PVT_LIST)
+			if(newp->flags & PVT_LIST)
 				continue;
 			else
 			{
@@ -369,8 +369,8 @@ int NewProperty(struct Node *n, token id, char *id_buf, char *idstr)
 			break;
 	}
 
-	if(!new->value)					/* property has values? */
-		Del_Property(n, new);		/* no -> delete it */
+	if(!newp->value)				/* property has values? */
+		Del_Property(n, newp);		/* no -> delete it */
 
 	return(ret);
 }
@@ -467,7 +467,7 @@ int MakeProperties(struct Node *n)
 								break;
 							}
 
-							if(!NewProperty(n, i, id, propid))
+							if(!NewProperty(n, (token)i, id, propid))
 								return(FALSE);
 							break;
 						}
@@ -504,64 +504,64 @@ int MakeProperties(struct Node *n)
 
 struct Node *NewNode(struct Node *parent, int newchild)
 {
-	struct Node *new, *hlp;
+	struct Node *newn, *hlp;
 
-	SaveMalloc(new, sizeof(struct Node), "node structure");
+	SaveMalloc((void *)newn, sizeof(struct Node), "node structure");
 
-	new->parent		= parent;		/* init node structure */
-	new->child		= NULL;
-	new->sibling	= NULL;
-	new->prop		= NULL;
-	new->last		= NULL;
-	new->buffer		= sgfc->current;
+	newn->parent		= parent;		/* init node structure */
+	newn->child		= NULL;
+	newn->sibling	= NULL;
+	newn->prop		= NULL;
+	newn->last		= NULL;
+	newn->buffer		= sgfc->current;
 
-	AddTail(sgfc, new);
+	AddTail(sgfc, newn);
 
 	if(parent)						/* no parent -> root node */
 	{
 		if(newchild)				/* insert node as new child of parent */
 		{
-			new->child = parent->child;
-			parent->child = new;
+			newn->child = parent->child;
+			parent->child = newn;
 
-			hlp = new->child;		/* set new parent of children */
+			hlp = newn->child;		/* set new parent of children */
 			while(hlp)
 			{
-				hlp->parent = new;
+				hlp->parent = newn;
 				hlp = hlp->sibling;
 			}
 		}
 		else
 		{
 			if(!parent->child)			/* parent has no child? */
-				parent->child = new;
+				parent->child = newn;
 			else						/* parent has a child already */
 			{							/* -> insert as sibling */
 				hlp = parent->child;
 				while(hlp->sibling)
 					hlp = hlp->sibling;
-				hlp->sibling = new;
+				hlp->sibling = newn;
 			}
 		}
 	}
 	else							/* new root node */
 	{
 		if(!sgfc->root)				/* first root? */
-			sgfc->root = new;
+			sgfc->root = newn;
 		else
 		{
 			hlp = sgfc->root;		/* root sibling */
 			while(hlp->sibling)
 				hlp = hlp->sibling;
-			hlp->sibling = new;
+			hlp->sibling = newn;
 		}
 	}
 
 	if(!newchild)
-		if(!MakeProperties(new))
+		if(!MakeProperties(newn))
 			return(NULL);
 
-	return(new);
+	return(newn);
 }
 
 
@@ -734,7 +734,7 @@ void LoadSGF(struct SGFInfo *sgf)
 	if(size == -1L)
 		PrintError(FE_SOURCE_READ, sgf->name);
 
-    SaveMalloc(sgf->buffer, size, "source file buffer");
+    SaveMalloc((void *)sgf->buffer, size, "source file buffer");
 
     if(fseek(sgf->file, 0, SEEK_SET) == -1L)	/* read SGF file */
 		PrintError(FE_SOURCE_READ, sgf->name);

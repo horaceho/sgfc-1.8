@@ -137,6 +137,11 @@ struct Node *Del_Node(struct Node *, ULONG);
 struct Property *New_PropValue(struct Node *, token, char *, char *, int);
 
 
+/**** strict.c ****/
+
+void Strict_Checking(struct SGFInfo *sgf);
+
+
 /**** protos.h ****/
 
 #define AddTail(h,n) f_AddTail((struct ListHead *)(h), (struct ListNode *)(n))

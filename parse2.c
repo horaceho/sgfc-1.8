@@ -493,10 +493,10 @@ void Calc_GameSig(struct Node *r, struct TreeInfo *ti)
 void Split_Node(struct Node *n, USHORT flags, token id, int move)
 {
 	struct Property *p, *hlp;
-	struct Node *new;
+	struct Node *newnode;
 
-	new = NewNode(n, TRUE);		/* create new child node */
-	new->buffer = n->buffer;
+	newnode = NewNode(n, TRUE);		/* create new child node */
+	newnode->buffer = n->buffer;
 
 	p = n->prop;
 	while(p)
@@ -506,7 +506,7 @@ void Split_Node(struct Node *n, USHORT flags, token id, int move)
 		  (!move && (!(p->flags & flags) && p->id != id)))
 		{
 			Delete(&n->prop, p);
-			AddTail(&new->prop, p);
+			AddTail(&newnode->prop, p);
 		}
 		p = hlp;
 	}
@@ -601,7 +601,7 @@ void Check_DoubleProp(struct Node *n)
 						v = p->value;	l = strlen(v->value);
 						w = q->value;
 
-						SaveMalloc(c, l + strlen(w->value) + 4, "new property value");
+						SaveMalloc((void *)c, l + strlen(w->value) + 4, "new property value");
 
 						strcpy(c, v->value);
 						strcpy(c+l+2, w->value);
@@ -688,7 +688,7 @@ void Init_TreeInfo(struct Node *r)
 	struct TreeInfo *ti;
 	struct Property *ff, *gm, *sz;
 
-	SaveMalloc(ti, sizeof(struct TreeInfo), "tree info structure");
+	SaveMalloc((void *)ti, sizeof(struct TreeInfo), "tree info structure");
 
 	ti->FF = 0;						/* Init structure */
 	ti->GM = 0;
@@ -813,7 +813,7 @@ void Check_SGFTree(struct Node *r, struct BoardStatus *old)
 	struct Node *n;
 	struct BoardStatus *st;
 
-	SaveMalloc(st, sizeof(struct BoardStatus), "board status buffer");
+	SaveMalloc((void *)st, sizeof(struct BoardStatus), "board status buffer");
 	st->board = NULL;
 	st->markup = NULL;
 
@@ -825,12 +825,12 @@ void Check_SGFTree(struct Node *r, struct BoardStatus *old)
 
 			if(st->bsize)
 			{
-				SaveMalloc(st->board, st->bsize, "goban buffer");
+				SaveMalloc((void *)st->board, st->bsize, "goban buffer");
 				memcpy(st->board, old->board, st->bsize);
 			}
 
 			if(st->msize)
-				SaveMalloc(st->markup, st->msize, "markup buffer");
+				SaveMalloc((void *)st->markup, st->msize, "markup buffer");
 
 			st->mrkp_chngd = TRUE;
 		}
@@ -843,13 +843,13 @@ void Check_SGFTree(struct Node *r, struct BoardStatus *old)
 			st->bsize = st->bwidth * sgfc->info->bheight * sizeof(char);
 			if(st->bsize)
 			{
-				SaveMalloc(st->board, st->bsize, "goban buffer");
+				SaveMalloc((void *)st->board, st->bsize, "goban buffer");
 				memset(st->board, 0, st->bsize);
 			}
 
 			st->msize = st->bwidth * sgfc->info->bheight * sizeof(USHORT);
 			if(st->msize)
-				SaveMalloc(st->markup, st->msize, "markup buffer");
+				SaveMalloc((void *)st->markup, st->msize, "markup buffer");
 			st->mrkp_chngd = TRUE;
 		}
 

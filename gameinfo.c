@@ -591,7 +591,7 @@ int Check_GameInfo(struct Property *p, struct PropValue *v)
 	size = (strlen(v->value) > 25) ? (strlen(v->value) + 2) : 27;
 	/* correct funcions may use up to 25 bytes */
 
-	SaveMalloc(val, size, "result value buffer");
+	SaveMalloc((void *)val, size, "result value buffer");
 	strcpy(val, v->value);
 
 	res = (*parse)(val, 0);
@@ -639,7 +639,7 @@ int Check_GameInfo(struct Property *p, struct PropValue *v)
 int PromptGameInfo(struct Property *p, struct PropValue *v,
 				   int (*Parse_Value)(char *, USHORT))
 {
-	char *new, *old, inp[2000];
+	char *newgi, *oldgi, inp[2001];
 	long size;
 	int ret;
 
@@ -649,32 +649,34 @@ int PromptGameInfo(struct Property *p, struct PropValue *v,
 		return(TRUE);
 	}
 
-	old = SkipText(v->buffer, NULL, ']', 0);
-	size = old-v->buffer;
+	oldgi = SkipText(v->buffer, NULL, ']', 0);
+	size = oldgi - v->buffer;
 	if(size < 25)		/* CorrectDate may use up to 15 chars */
 		size = 25;
 
-	SaveMalloc(new, size+2, "game info value buffer");
-	CopyValue(new, v->buffer+1, old-v->buffer-1, FALSE);
+	SaveMalloc((void *)newgi, size+2, "game info value buffer");
+	CopyValue(newgi, v->buffer+1, oldgi - v->buffer-1, FALSE);
 
-	SaveMalloc(old, strlen(new)+2, "game info value buffer");
-	strcpy(old, new);
+	SaveMalloc((void *)oldgi, strlen(newgi)+2, "game info value buffer");
+	strcpy(oldgi, newgi);
 
 	PrintError(E4_FAULTY_GC, v->buffer, p->idstr, "");
 
 	while(TRUE)
 	{
-		ret = (*Parse_Value)(new, 0);
+		ret = (*Parse_Value)(newgi, 0);
 
-		if(ret)	printf("--> Use [%s] (enter), delete (d) or type in new value? ", new);
+		if(ret)	printf("--> Use [%s] (enter), delete (d) or type in new value? ", newgi);
 		else	printf("--> Keep faulty value (enter), delete (d) or type in new value? ");
 
-		gets(inp);
+		fgets(inp, 2000, stdin);
+		if(strlen(inp))
+			inp[strlen(inp)-1] = 0;	/* delete last char, it is a newline */
 
 		if(!strnccmp(inp, "d", 0))	/* delete */
 		{
-			free(new);
-			free(old);
+			free(newgi);
+			free(oldgi);
 			return(FALSE);
 		}
 
@@ -684,7 +686,7 @@ int PromptGameInfo(struct Property *p, struct PropValue *v,
 			if(ret == 1)
 			{
 				free(v->value);
-				SaveMalloc(v->value, strlen(inp)+4, "game info value buffer");
+				SaveMalloc((void *)v->value, strlen(inp)+4, "game info value buffer");
 				strcpy(v->value, inp);
 				break;
 			}
@@ -693,22 +695,22 @@ int PromptGameInfo(struct Property *p, struct PropValue *v,
 				puts("--! Error in input string !--");
 				if(ret == -1)
 				{
-					size = (strlen(inp) < 25) ? strlen(inp) : 25;
-					free(new);
-					SaveMalloc(new, size+2, "game info value buffer");
-					strcpy(new, inp);
+					size = (strlen(inp) > 25) ? strlen(inp) : 25;
+					free(newgi);
+					SaveMalloc((void *)newgi, size+2, "game info value buffer");
+					strcpy(newgi, inp);
 				}
 			}
 		}
 		else					/* return */
 		{
-			if(ret)		strcpy(v->value, new);
-			else		strcpy(v->value, old);
+			if(ret)		strcpy(v->value, newgi);
+			else		strcpy(v->value, oldgi);
 			break;
 		}
 	}
 
-	free(new);
-	free(old);
+	free(newgi);
+	free(oldgi);
 	return(TRUE);
 }

@@ -30,11 +30,6 @@
 #include "all.h"
 #include "protos.h"
 
-#ifdef VERSION_MAC
-#include <console.h>
-#endif
-
-
 struct SGFInfo sgf;
 
 struct SGFInfo *sgfc = NULL;
@@ -239,10 +234,6 @@ int ParseArgs(int argc, char *argv[])
 int main(int argc, char *argv[])
 {
 	int ret = 0;
-
-#ifdef VERSION_MAC
-	argc = ccommand(&argv);
-#endif
 
 	memset(error_enabled, TRUE, sizeof(error_enabled));
 

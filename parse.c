@@ -602,7 +602,7 @@ int Check_Figure(struct Property *p, struct PropValue *v)
 			else
 			{
 				v->value2 = v->value;
-				SaveMalloc(v->value, 4, "new FG number value");
+				SaveMalloc((void *)v->value, 4, "new FG number value");
 				strcpy(v->value, "0");
 				PrintError(E_BAD_COMPOSE_CORRECTED, v->buffer, "FG", v->value, v->value2);
 			}
