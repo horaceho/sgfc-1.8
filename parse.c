@@ -254,17 +254,19 @@ int Parse_Move(char *value, USHORT pos)
 *** Function:	Parse_Float
 ***				Checks for correct float format / tries to correct
 *** Parameters: value ... pointer to value string
+***				flags ... TYPE_GINFO => disallow '-' and '+' characters
 *** Returns:	-1/0/1/2 for corrected error / error / OK / corrected
 **************************************************************************/
 
-int Parse_Float(char *value, USHORT dummy)
+int Parse_Float(char *value, USHORT flags)
 {
 	int ret = 1, where = 0;
 	/* where (bits): 0-minus / 1-int / 2-fraction / 3-'.' / 4-plus */
 	ULONG i;
 	char *s, *d;
+	char *allowed = (flags & TYPE_GINFO) ? "0123456789.," : "0123456789+-.,";
 
-	if(Kill_Chars(value, C_NOTinSET, "0123456789+-.,"))
+	if(Kill_Chars(value, C_NOTinSET, allowed))
 		ret = -1;
 
 	s = d = value;
@@ -273,7 +275,10 @@ int Parse_Float(char *value, USHORT dummy)
 		switch(*s)
 		{
 			case '+':	if(where)	ret = -1;		/* '+' gets swallowed */
-						else		where = 16;
+						else	{
+									where = 16;
+									ret = 2;
+								}
 						break;
 			case '-':	if(where)	ret = -1;
 						else
@@ -322,15 +327,22 @@ int Parse_Float(char *value, USHORT dummy)
 
 		if((where & 8) && (where & 4))	/* check for unnecssary '0' */
 		{
+			int mod = 0;	/* if correction occured */
 			d = value + strlen(value) - 1;
 
 			while(*d == '0')
+			{
 				*d-- = 0;
+				mod = 1;
+			}
 
 			if(*d == '.')
+			{
 				*d = 0;
+				mod = 1;
+			}
 
-			if(ret == 1)
+			if(ret == 1 && mod == 1)
 				ret = 2;
 		}
 

@@ -147,7 +147,7 @@ int Parse_Time(char *val, USHORT dummy)
 *** Function:	Parse_Result
 ***				Checks result value and corrects it if possible
 *** Parameters: val ... pointer to RE string
-*** Returns:	-1/0/1: corrected error / error / ok
+*** Returns:	-1/0/1/2: corrected error / error / ok / corrected
 **************************************************************************/
 
 int Parse_Result(char *val, USHORT dummy)
@@ -237,7 +237,7 @@ int Parse_Result(char *val, USHORT dummy)
 							else
 							if((type & 24) || charpoints)	/* point win */
 							{
-								err = Parse_Float(&val[1], 0);
+								err = Parse_Float(&val[1], TYPE_GINFO);
 
 								if(!err && !charpoints)	/* no points found */
 								{
@@ -253,7 +253,7 @@ int Parse_Result(char *val, USHORT dummy)
 
 									points += (charpoints / 4.0);
 									sprintf(&val[1], "+%f", points);
-									Parse_Float(&val[2], 0);
+									Parse_Float(&val[2], TYPE_GINFO);
 								}
 							}
 							else	/* just win or lose */
@@ -276,7 +276,6 @@ int Parse_Result(char *val, USHORT dummy)
 							break;
 						if(!strcmp(&val[2], "Forfeit"))
 							break;
-
 						switch(val[2])	/* looking for shortcuts */
 						{				/* or win by points		 */
 							case 'r':
@@ -292,11 +291,14 @@ int Parse_Result(char *val, USHORT dummy)
 										}
 										break;
 
-							default:	switch(Parse_Float(&val[2], 0))
+							default:	switch(Parse_Float(&val[2], TYPE_GINFO))
 										{
 											case 0:		err = 0;	break;
 											case -1:	err = -1;	break;
 											case 1:		break;
+											case 2:		if(err == 1)
+															err = 2;
+														break;
 										}
 
 										if(charpoints)
@@ -304,7 +306,7 @@ int Parse_Result(char *val, USHORT dummy)
 											err = -1;
 											points = atof(&val[2]) + (charpoints/4.0);
 											sprintf(&val[2], "%f", points);
-											Parse_Float(&val[2], 0);
+											Parse_Float(&val[2], TYPE_GINFO);
 										}
 										else
 											if(!err)
