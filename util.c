@@ -30,12 +30,12 @@ const char *error_mesg[] =
 {
 	"unknown command '%s' (-h for help)\n",
 	"unknown command line option '%c' (-h for help)\n",
-	"couldn't open source file '%s' - ",
-	"couldn't read source file '%s' - ",
-	"couldn't allocate %s (not enough memory)\n",
+	"could not open source file '%s' - ",
+	"could not read source file '%s' - ",
+	"could not allocate %s (not enough memory)\n",
 /* 5 */
 	"possible SGF data found in front of game-tree (before '(;')\n",
-	"couldn't find start mark '(;' - no SGF data found\n",
+	"could not find start mark '(;' - no SGF data found\n",
 	"illegal char(s) found: ",
 	"variation nesting incomplete (missing ')')\n",
 	"unexpected end of file\n",
@@ -49,8 +49,8 @@ const char *error_mesg[] =
 	"lowercase char not allowed in property identifier\n",
 	"empty <%s> value %s (deleted)\n",
 	"illegal root property <%s> found (assuming %s)\n",
-	"game stored in tree %d is not Go. Can't check move & position type"
-									" -> errors won't get corrected!\n",
+	"game stored in tree %d is not Go. Can not check move & position type"
+									" -> errors will not get corrected!\n",
 	"property <%s> without any values found (ignored)\n",
 /* 20 */
 	"illegal variation start found (ignored)\n",
@@ -59,8 +59,8 @@ const char *error_mesg[] =
 	"move in root node found (splitted node into two)\n",
 	"illegal <%s> value corrected; new value: [%s:%s], old value: ",
 /* 25 */
-	"couldn't open destination file '%s' - ",
-	"couldn't write destination file '%s' - ",
+	"could not open destination file '%s' - ",
+	"could not write destination file '%s' - ",
 	"property <%s> already exists (%s)\n",
 	"%sproperty <%s> deleted\n",
 	"setup and move properties mixed within a node (%s)\n",
@@ -75,7 +75,7 @@ const char *error_mesg[] =
 	"black and white move within a node (split into two nodes)\n",
 	"%s <%s> position not unique ([partially] deleted) - value(s): ",
 	"AddStone <%s> has no effect ([partially] deleted) - value(s): ",
-	"property <%s> isn't defined in FF[%d] (%s)\n",
+	"property <%s> is not defined in FF[%d] (%s)\n",
 /* 40 */
 	"annotation property <%s> contradicts previous property (deleted)\n",
 	"combination of <%s> found (converted to <%s>)\n",
@@ -89,13 +89,13 @@ const char *error_mesg[] =
 	"bad command line option parameter '%s' (-h for help)\n",
 	"board size too big (corrected to %dx%d)\n",
 /* 50 */
-	"used feature isn't defined in FF[%d] (parsing done anyway)\n",
+	"used feature is not defined in FF[%d] (parsing done anyway)\n",
 	"<VW> property: %s (%s)\n",
 	"destination file name too long (max. length: 480 chars)\n",
 	"values without property id found (deleted)\n",
 	"empty node deleted\n",
 /* 55 */
-	"possible incorrect variation level can't be corrected\n",
+	"possible incorrect variation level can not be corrected\n",
 	"variation level corrected\n",
 	"forbidden move found (played on a point occupied by another stone)\n",
 	"obsolete <KI> property found: %s\n",
@@ -166,36 +166,36 @@ void SearchPos(char *c, char *s, int *x, int *y)
 ***				(may quit program, if error is fatal!)
 **************************************************************************/
 
-int PrintError(ULONG type, ...)
+int PrintError(U_LONG type, ...)
 {
 	int x, y, print_c = 0;
 	char *pos = NULL, *pos2;
 	static char *illegal, *last_pos;
 	static int ill_count = 0;
-	static ULONG ill_type = NO_ERROR, last_type;
+	static U_LONG ill_type = E_NO_ERROR, last_type;
 	va_list arglist;
 
 	va_start(arglist, type);
 
-	if(type & ERROR4)
+	if(type & E_ERROR4)
 	{
-		if(sgfc->info->FF >= 4)		type |= ERROR;
-		else						type |= WARNING;
+		if(sgfc->info->FF >= 4)		type |= E_ERROR;
+		else						type |= E_WARNING;
 	}
-	if(type & WARNING_STRICT)
+	if(type & E_WARNING_STRICT)
 	{
-		if(option_strict_checking)	type |= ERROR;
-		else						type |= WARNING;
+		if(option_strict_checking)	type |= E_ERROR;
+		else						type |= E_WARNING;
 	}
 
-	if((!error_enabled[(type & ERROR_NUM)-1] && !(type & FATAL_ERROR)
-		 && type != NO_ERROR) || (!option_warnings && (type & WARNING)))
+	if((!error_enabled[(type & M_ERROR_NUM)-1] && !(type & E_FATAL_ERROR)
+		 && type != E_NO_ERROR) || (!option_warnings && (type & E_WARNING)))
 	{								/* error message enabled? */
 		ignored_count++;
 		return(FALSE);
 	}
 
-	if(type & SEARCH_POS)			/* get pointer to position if required */
+	if(type & E_SEARCHPOS)			/* get pointer to position if required */
 	{
 		pos = va_arg(arglist, char *);
 
@@ -209,7 +209,7 @@ int PrintError(ULONG type, ...)
 		}
 	}
 	else
-		last_type = NO_ERROR;
+		last_type = E_NO_ERROR;
 
 
 	if((type & E_ACCUMULATE))			/* accumulate error messages? */
@@ -219,7 +219,7 @@ int PrintError(ULONG type, ...)
 			if(ill_count)				/* any errors already accumulated? */
 			{
 				if((illegal + ill_count != pos) ||				/* succeed? */
-				  ((ill_type & ERROR_NUM)!=(type & ERROR_NUM)))	/* same type? */
+				  ((ill_type & M_ERROR_NUM)!=(type & M_ERROR_NUM)))
 				{
 					PrintError(ill_type, illegal, FALSE);	/* no -> flush */
 					illegal = pos;							/* set new */
@@ -248,37 +248,37 @@ int PrintError(ULONG type, ...)
 			PrintError(ill_type, illegal, FALSE);	/* flush buffer */
 													/* and continue ! */
 
-	if(type & SEARCH_POS)				/* print position if required */
+	if(type & E_SEARCHPOS)				/* print position if required */
 	{
 		SearchPos(pos, sgfc->buffer, &x, &y);
 		fprintf(E_OUTPUT, "Line:%d Col:%d - ", y, x);
 	}
 
-	switch(type & ERROR_TYPE)
+	switch(type & M_ERROR_TYPE)
 	{
-		case FATAL_ERROR:	fprintf(E_OUTPUT, "Fatal error %d", (int)(type & ERROR_NUM));
+		case E_FATAL_ERROR:	fprintf(E_OUTPUT, "Fatal error %d", (int)(type & M_ERROR_NUM));
 							break;
-		case ERROR:			fprintf(E_OUTPUT, "Error %d", (int)(type & ERROR_NUM));
+		case E_ERROR:		fprintf(E_OUTPUT, "Error %d", (int)(type & M_ERROR_NUM));
 							error_count++;
 							break;
-		case WARNING:		fprintf(E_OUTPUT, "Warning %d", (int)(type & ERROR_NUM));
+		case E_WARNING:		fprintf(E_OUTPUT, "Warning %d", (int)(type & M_ERROR_NUM));
 							warning_count++;
 							break;
 	}
 
-	if(type & CRITICAL)
+	if(type & E_CRITICAL)
 	{
 		critical_count++;
 		fprintf(E_OUTPUT, " (critical): ");
 	}
 	else
-		if(type != NO_ERROR)
+		if(type != E_NO_ERROR)
 			fprintf(E_OUTPUT, ": ");
 
-	if(type != NO_ERROR)
+	if(type != E_NO_ERROR)
 	{
 		/* print error */
-		vfprintf(E_OUTPUT, error_mesg[(type & ERROR_NUM)-1], arglist);
+		vfprintf(E_OUTPUT, error_mesg[(type & M_ERROR_NUM)-1], arglist);
 
 		if(print_c)					/* print accumulated string? */
 		{
@@ -321,7 +321,7 @@ int PrintError(ULONG type, ...)
 
 	va_end(arglist);
 
-	if((type & ERROR_TYPE) == FATAL_ERROR)	/* fatal one? */
+	if((type & M_ERROR_TYPE) == E_FATAL_ERROR)	/* fatal one? */
 	{
 		FreeSGFInfo(sgfc);
 		exit(20);							/* say dada */
@@ -530,9 +530,9 @@ int strnccmp(char *a, char *b, int len)
 *** Returns:	number of chars removed from string
 **************************************************************************/
 
-ULONG Kill_Chars(char *value, USHORT kill, char *cset)
+U_LONG Kill_Chars(char *value, U_SHORT kill, char *cset)
 {
-	ULONG faulty = 0, err = 0;
+	U_LONG faulty = 0, err = 0;
 	char *c, *d;
 
 	for(c = d = value; *c; c++)
@@ -577,9 +577,9 @@ ULONG Kill_Chars(char *value, USHORT kill, char *cset)
 *** Returns:	number of selected chars found in value
 **************************************************************************/
 
-ULONG Test_Chars(char *value, USHORT test, char *cset)
+U_LONG Test_Chars(char *value, U_SHORT test, char *cset)
 {
-	ULONG faulty = 0;
+	U_LONG faulty = 0;
 	char *c;
 
 	for(c = value; *c; c++)
@@ -691,7 +691,7 @@ struct Property *Del_Property(struct Node *n, struct Property *p)
 *** Returns:	n->next
 **************************************************************************/
 
-struct Node *Del_Node(struct Node *n, ULONG error_code)
+struct Node *Del_Node(struct Node *n, U_LONG error_code)
 {
 	struct Node *p, *h;
 	struct Property *i;
@@ -705,7 +705,7 @@ struct Node *Del_Node(struct Node *n, ULONG error_code)
 				return(n->next);
 	}
 
-	if(error_code != NO_ERROR)
+	if(error_code != E_NO_ERROR)
 		PrintError(error_code, n->buffer);
 
 	if(n->prop)						/* delete properties */

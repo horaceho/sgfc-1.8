@@ -81,9 +81,9 @@ int WriteChar(FILE *sfile, char c, int spc)
 *** Returns:	TRUE or FALSE
 **************************************************************************/
 
-int WritePropValue(char *v, int second, USHORT flags, FILE *sfile)
+int WritePropValue(char *v, int second, U_SHORT flags, FILE *sfile)
 {
-	USHORT fl;
+	U_SHORT fl;
 
 	if(!v)	return(TRUE);
 	

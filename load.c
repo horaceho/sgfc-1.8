@@ -90,11 +90,11 @@ char *SkipText(char *s, char *e, char end, int mode)
 ***					In last case sgfc->current points to beginning of text
 ***				 	(leading lowercase possible)
 *** Parameters: print_error ... print error message
-***				errc ... error code for printing on failure (or NO_ERROR)
+***				errc ... error code for printing on failure (or E_NO_ERROR)
 *** Returns:	TRUE or FALSE
 **************************************************************************/
 
-int GetNextChar(int print_error, ULONG errc)
+int GetNextChar(int print_error, U_LONG errc)
 {
 	int lc = 0;
 
@@ -134,7 +134,7 @@ int GetNextChar(int print_error, ULONG errc)
 		}
 	}
 
-	if(errc != NO_ERROR)
+	if(errc != E_NO_ERROR)
 		PrintError(errc, sgfc->current);
 	return(FALSE);
 }
@@ -181,7 +181,7 @@ int SkipValues(int print_error)
 *** Returns:	-
 **************************************************************************/
 
-void CopyValue(char *d, char *s, ULONG size, int printerror)
+void CopyValue(char *d, char *s, U_LONG size, int printerror)
 {
 	while(size--)
 	{
@@ -249,7 +249,7 @@ struct PropValue *Add_PropValue(struct Property *p, char *buffer,
 *** Returns:	TRUE or FALSE
 **************************************************************************/
 
-int NewValue(struct Property *p, USHORT flags)
+int NewValue(struct Property *p, U_SHORT flags)
 {
 	char *s, *t, *buffer;
 
@@ -768,5 +768,5 @@ void LoadSGF(struct SGFInfo *sgf)
 		miss = FindStart(FALSE);	/* skip junk in front of '(;' */
 	}
 
-	PrintError(NO_ERROR);			/* flush accumulated messages */
+	PrintError(E_NO_ERROR);			/* flush accumulated messages */
 }

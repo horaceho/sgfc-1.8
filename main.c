@@ -98,7 +98,7 @@ void PrintHelp(int everything)
 		"    -p  ... write pass moves as '[tt]' if possible\n"
 		"    -r  ... restrictive checking\n"
 		"    -s  ... split game collection into single files\n"
-		"    -t  ... don't insert any soft linebreaks into text values\n"
+		"    -t  ... do not insert any soft linebreaks into text values\n"
 		"    -u  ... delete unknown properties\n"
 		"    -v  ... correct variation level and root moves\n"
 		"    -w  ... disable warning messages\n"

@@ -15,8 +15,8 @@
 #include "protos.h"
 
 
-ULONG path_board[MAX_BOARDSIZE*MAX_BOARDSIZE];
-ULONG path_num = 0;
+U_LONG path_board[MAX_BOARDSIZE*MAX_BOARDSIZE];
+U_LONG path_num = 0;
 
 
 /**************************************************************************
@@ -332,7 +332,7 @@ int Do_Markup(struct Node *n, struct Property *p, struct BoardStatus *st)
 {
 	int x, y;
 	struct PropValue *v;
-	USHORT flag;
+	U_SHORT flag;
 
 	if(sgfc->info->GM != 1)		/* game != Go? */
 		return(TRUE);
@@ -373,7 +373,7 @@ int Do_Markup(struct Node *n, struct Property *p, struct BoardStatus *st)
 int Do_Annotate(struct Node *n, struct Property *p, struct BoardStatus *st)
 {
 	struct Property *hlp;
-	USHORT flag;
+	U_SHORT flag;
 
 	flag = sgf_token[p->id].data;
 

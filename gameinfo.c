@@ -56,7 +56,7 @@ int Get_Fraction(char *val)
 *** Returns:	-1/0/1/2: corrected error / error / ok / corrected
 **************************************************************************/
 
-int Parse_Komi(char *val, USHORT dummy)
+int Parse_Komi(char *val, U_SHORT dummy)
 {
 	int frac, ret;
 	double points = 0.0;
@@ -93,7 +93,7 @@ int Parse_Komi(char *val, USHORT dummy)
 *** Returns:	-1/0/1/2: corrected error / error / ok / corrected
 **************************************************************************/
 
-int Parse_Time(char *val, USHORT dummy)
+int Parse_Time(char *val, U_SHORT dummy)
 {
 	int ret = 1, hour = 0, min = 0;
 	double time;
@@ -150,7 +150,7 @@ int Parse_Time(char *val, USHORT dummy)
 *** Returns:	-1/0/1/2: corrected error / error / ok / corrected
 **************************************************************************/
 
-int Parse_Result(char *val, USHORT dummy)
+int Parse_Result(char *val, U_SHORT dummy)
 {
 	char *s, *d;
 	int err = 1, charpoints, type = 0;
@@ -421,7 +421,7 @@ int Correct_Date(char *value)
 *** Returns:	-1/0/1: corrected error / error / ok
 **************************************************************************/
 
-int Parse_Date(char *value, USHORT dummy)
+int Parse_Date(char *value, U_SHORT dummy)
 {
 	int ret = 1, allowed, type, hasgoty, turn, oldtype;
 	char *c, *d;
@@ -577,7 +577,7 @@ int Check_GameInfo(struct Property *p, struct PropValue *v)
 {
 	char *val;
 	int res, size;
-	int (*parse)(char *, USHORT);
+	int (*parse)(char *, U_SHORT);
 
 	if(!Check_Text(p, v))		/* parse text (converts spaces) */
 		return(FALSE);
@@ -640,7 +640,7 @@ int Check_GameInfo(struct Property *p, struct PropValue *v)
 **************************************************************************/
 
 int PromptGameInfo(struct Property *p, struct PropValue *v,
-				   int (*Parse_Value)(char *, USHORT))
+				   int (*Parse_Value)(char *, U_SHORT))
 {
 	char *newgi, *oldgi, inp[2001];
 	long size;

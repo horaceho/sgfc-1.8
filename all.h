@@ -3,7 +3,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 all.h
 ***
-*** Copyright (C) 1996-2004 by Arno Hollosi
+*** Copyright (C) 1996-2005 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 *** Notes:	global definition of all #defines and structures
@@ -24,13 +24,12 @@
 #define EOLCHAR '\n'	/* EndOfLine-Character
 						** '\n' for UNIX, AMIGA (SGF standard)
 						** '\r' for MAC
-						** 0    for PC's (0 gets translated to "\r\n")
 						*/
 
 
-typedef unsigned char	UCHAR;
-typedef unsigned short	USHORT;
-typedef unsigned long	ULONG;
+typedef unsigned char	U_CHAR;
+typedef unsigned short	U_SHORT;
+typedef unsigned long	U_LONG;
 
 #ifndef TRUE
 #define TRUE	1
@@ -108,12 +107,12 @@ typedef enum {
 
 struct BoardStatus
 {
-	USHORT annotate;		/* flags for annotation props, etc. */
+	U_SHORT annotate;		/* flags for annotation props, etc. */
 	char *ginfo;			/* pointer into buffer of first GINFO property */
 	int bwidth;				/* copy of sgfc->info->bwidth */
 	char *board;
 	int bsize;				/* board size in bytes */
-	USHORT *markup;
+	U_SHORT *markup;
 	int msize;				/* markup size in bytes */
 	char mrkp_chngd;		/* markup field changed */
 };
@@ -135,11 +134,11 @@ struct Property
 {
 	struct Property *next;		/* list */
 	struct Property *prev;
-	UCHAR  priority;			/* for sorting properties within a node */
+	U_CHAR  priority;			/* for sorting properties within a node */
 
 	token id;
 	char *idstr;				/* id string (necessary because of TKN_UNKNOWN) */
-	USHORT flags;				/* copy of sgf_token[].flags (may get changed though) */
+	U_SHORT flags;				/* copy of sgf_token[].flags (may get changed though) */
 	char *buffer;
 
 	struct PropValue *value;	/* value list head */
@@ -203,7 +202,7 @@ struct ListNode
 {
 	struct ListNode *next;
 	struct ListNode *prev;
-	UCHAR priority;		/* is only used by Enqueue function */
+	U_CHAR priority;		/* is only used by Enqueue function */
 };
 
 struct ListHead
@@ -216,125 +215,126 @@ struct ListHead
 struct SGFToken
 {
 	char *id;
-	UCHAR priority;
-	UCHAR ff;		/* file format */
+	U_CHAR priority;
+	U_CHAR ff;		/* file format */
 	int (*CheckValue)(struct Property *, struct PropValue *);
 	int (*Execute_Prop)(struct Node *, struct Property *, struct BoardStatus *);
-	USHORT flags;
-	USHORT data;	/* for Do_XXX */
+	U_SHORT flags;
+	U_SHORT data;	/* for Do_XXX */
 };
 
 
 /* Defines for KillChars / TestChars */
 
-#define C_ISSPACE	((USHORT)0x01)
-#define C_ISPUNCT	((USHORT)0x04)
-#define C_IS8BIT	((USHORT)0x08)
-#define C_ISALPHA	((USHORT)0x10)
-#define C_inSET		((USHORT)0x20)
-#define C_NOTinSET	((USHORT)0x40)
+#define C_ISSPACE	((U_SHORT)0x01)
+#define C_ISPUNCT	((U_SHORT)0x04)
+#define C_IS8BIT	((U_SHORT)0x08)
+#define C_ISALPHA	((U_SHORT)0x10)
+#define C_inSET		((U_SHORT)0x20)
+#define C_NOTinSET	((U_SHORT)0x40)
 
 /* defines for error handling */
 
-#define NO_ERROR		0x00000000L
-#define FATAL_ERROR		0x40000000L
-#define ERROR			0x20000000L
-#define WARNING			0x10000000L
-#define ERROR4			0x01000000L	/* error for FF[4] / warning otherwise */
-#define CRITICAL		0x02000000L
-#define WARNING_STRICT	0x04000000L /* error if strict checking, else warning */
-#define ERROR_TYPE		0x70000000L
-#define ERROR_NUM		0x00000fffL
+#define E_NO_ERROR		0x00000000L
+#define E_FATAL_ERROR	0x40000000L
+#define E_ERROR			0x20000000L
+#define E_WARNING		0x10000000L
+#define E_ERROR4		0x01000000L	/* error for FF[4] / warning otherwise */
+#define E_CRITICAL		0x02000000L
+#define E_WARNING_STRICT 0x04000000L /* error if strict checking,else warning */
 #define E_VALUE			0x00010000L
-#define SEARCH_POS		0x00020000L
+#define E_SEARCHPOS	0x00020000L
 #define E_ACCUMULATE	0x00040000L
 #define E_MULTIPLE		0x00080000L
 #define E_ERRNO			0x00100000L
 #define E_DEL_DOUBLE	0x00200000L
 
 #define E_SET_SGFINFO			(0xfff | ERROR)
-
 #define E_OUTPUT	stdout			/* output channel for error messages */
 
-/* defines of error codes		**
-** has to match *error_mesg[]	*/
+/* masks for error handling */
+#define M_ERROR_TYPE	0x70000000L
+#define M_ERROR_NUM		0x00000fffL
 
-#define FE_TOO_MANY_FILES		(1 | FATAL_ERROR)
-#define FE_UNKNOWN_OPTION		(2 | FATAL_ERROR)
-#define FE_SOURCE_OPEN			(3 | FATAL_ERROR | E_ERRNO)
-#define FE_SOURCE_READ			(4 | FATAL_ERROR | E_ERRNO)
-#define FE_OUT_OF_MEMORY		(5 | FATAL_ERROR)
-#define W_SGF_IN_HEADER			(6 | WARNING | CRITICAL | SEARCH_POS)
-#define FE_NO_SGFDATA			(7 | FATAL_ERROR)
-#define E_ILLEGAL_OUTSIDE_CHAR	(8 | ERROR | CRITICAL | SEARCH_POS | E_ACCUMULATE)
-#define E_ILLEGAL_OUTSIDE_CHARS	(8 | ERROR | CRITICAL | SEARCH_POS | E_ACCUMULATE | E_MULTIPLE)
-#define E_VARIATION_NESTING		(9 | ERROR | CRITICAL | SEARCH_POS)
-#define E_UNEXPECTED_EOF		(10 | ERROR | CRITICAL | SEARCH_POS)
+/* defines of E_ERROR codes		**
+** has to match *E_ERROR_mesg[]	*/
 
-#define E_PROPID_TOO_LONG		(11 | ERROR | CRITICAL | SEARCH_POS)
-#define E_EMPTY_VARIATION		(12 | ERROR | SEARCH_POS)
-#define E_TOO_MANY_VALUES		(13 | ERROR | CRITICAL | SEARCH_POS)
-#define E_BAD_VALUE_DELETED		(14 | ERROR | SEARCH_POS | E_VALUE)
-#define E_BAD_VALUE_CORRECTED	(15 | ERROR | SEARCH_POS | E_VALUE)
-#define E4_BAD_VALUE_CORRECTED	(15 | ERROR4 | SEARCH_POS | E_VALUE)
-#define E_LC_IN_PROPID			(16 | ERROR | SEARCH_POS)
-#define E_EMPTY_VALUE_DELETED	(17 | ERROR | SEARCH_POS)
-#define W_EMPTY_VALUE_DELETED	(17 | WARNING | SEARCH_POS)
-#define E_BAD_ROOT_PROP			(18 | ERROR | SEARCH_POS)
-#define WCS_GAME_NOT_GO			(19 | WARNING_STRICT | CRITICAL | SEARCH_POS)
-#define E_NO_PROP_VALUES		(20 | ERROR | CRITICAL | SEARCH_POS)
+#define FE_TOO_MANY_FILES		(1 | E_FATAL_ERROR)
+#define FE_UNKNOWN_OPTION		(2 | E_FATAL_ERROR)
+#define FE_SOURCE_OPEN			(3 | E_FATAL_ERROR | E_ERRNO)
+#define FE_SOURCE_READ			(4 | E_FATAL_ERROR | E_ERRNO)
+#define FE_OUT_OF_MEMORY		(5 | E_FATAL_ERROR)
+#define W_SGF_IN_HEADER			(6 | E_WARNING | E_CRITICAL | E_SEARCHPOS)
+#define FE_NO_SGFDATA			(7 | E_FATAL_ERROR)
+#define E_ILLEGAL_OUTSIDE_CHAR	(8 | E_ERROR | E_CRITICAL | E_SEARCHPOS | E_ACCUMULATE)
+#define E_ILLEGAL_OUTSIDE_CHARS	(8 | E_ERROR | E_CRITICAL | E_SEARCHPOS | E_ACCUMULATE | E_MULTIPLE)
+#define E_VARIATION_NESTING		(9 | E_ERROR | E_CRITICAL | E_SEARCHPOS)
+#define E_UNEXPECTED_EOF		(10 | E_ERROR | E_CRITICAL | E_SEARCHPOS)
 
-#define E_VARIATION_START		(21 | ERROR | CRITICAL | SEARCH_POS)
-#define W_CTRL_BYTE_DELETED		(22 | WARNING | SEARCH_POS)
-#define E_COMPOSE_EXPECTED		(23 | ERROR | SEARCH_POS | E_VALUE)
-#define WS_MOVE_IN_ROOT			(24 | WARNING_STRICT | SEARCH_POS)
-#define E_BAD_COMPOSE_CORRECTED	(25 | ERROR | SEARCH_POS | E_VALUE)
-#define FE_DEST_FILE_OPEN		(26 | FATAL_ERROR | E_ERRNO)
-#define FE_DEST_FILE_WRITE		(27 | FATAL_ERROR | E_ERRNO)
-#define E_DOUBLE_PROP			(28 | ERROR | SEARCH_POS)
-#define W_PROPERTY_DELETED		(29 | WARNING | SEARCH_POS)
-#define E4_MOVE_SETUP_MIXED		(30 | ERROR4  | SEARCH_POS)
+#define E_PROPID_TOO_LONG		(11 | E_ERROR | E_CRITICAL | E_SEARCHPOS)
+#define E_EMPTY_VARIATION		(12 | E_ERROR | E_SEARCHPOS)
+#define E_TOO_MANY_VALUES		(13 | E_ERROR | E_CRITICAL | E_SEARCHPOS)
+#define E_BAD_VALUE_DELETED		(14 | E_ERROR | E_SEARCHPOS | E_VALUE)
+#define E_BAD_VALUE_CORRECTED	(15 | E_ERROR | E_SEARCHPOS | E_VALUE)
+#define E4_BAD_VALUE_CORRECTED	(15 | E_ERROR4 | E_SEARCHPOS | E_VALUE)
+#define E_LC_IN_PROPID			(16 | E_ERROR | E_SEARCHPOS)
+#define E_EMPTY_VALUE_DELETED	(17 | E_ERROR | E_SEARCHPOS)
+#define W_EMPTY_VALUE_DELETED	(17 | E_WARNING | E_SEARCHPOS)
+#define E_BAD_ROOT_PROP			(18 | E_ERROR | E_SEARCHPOS)
+#define WCS_GAME_NOT_GO			(19 | E_WARNING_STRICT | E_CRITICAL | E_SEARCHPOS)
+#define E_NO_PROP_VALUES		(20 | E_ERROR | E_CRITICAL | E_SEARCHPOS)
 
-#define WS_LONG_PROPID			(31 | WARNING_STRICT | SEARCH_POS)
-#define E_ROOTP_NOT_IN_ROOTN	(32 | ERROR | SEARCH_POS)
-#define E4_FAULTY_GC			(33 | ERROR4 | SEARCH_POS | E_VALUE)
-#define E_CRITICAL_NOT_SAVED	(34 | ERROR)
-#define WS_UNKNOWN_PROPERTY		(35 | WARNING_STRICT | SEARCH_POS)
-#define E_MISSING_SEMICOLON		(36 | ERROR | CRITICAL | SEARCH_POS)
-#define E_TWO_MOVES_IN_NODE		(37 | ERROR | SEARCH_POS)
-#define E_POSITION_NOT_UNIQUE	(38 | ERROR | SEARCH_POS | E_VALUE | E_DEL_DOUBLE)
-#define WS_ADDSTONE_REDUNDANT	(39 | WARNING_STRICT|SEARCH_POS|E_DEL_DOUBLE)
-#define WS_PROPERTY_NOT_IN_FF	(40 | WARNING_STRICT | SEARCH_POS)
+#define E_VARIATION_START		(21 | E_ERROR | E_CRITICAL | E_SEARCHPOS)
+#define W_CTRL_BYTE_DELETED		(22 | E_WARNING | E_SEARCHPOS)
+#define E_COMPOSE_EXPECTED		(23 | E_ERROR | E_SEARCHPOS | E_VALUE)
+#define WS_MOVE_IN_ROOT			(24 | E_WARNING_STRICT | E_SEARCHPOS)
+#define E_BAD_COMPOSE_CORRECTED	(25 | E_ERROR | E_SEARCHPOS | E_VALUE)
+#define FE_DEST_FILE_OPEN		(26 | E_FATAL_ERROR | E_ERRNO)
+#define FE_DEST_FILE_WRITE		(27 | E_FATAL_ERROR | E_ERRNO)
+#define E_DOUBLE_PROP			(28 | E_ERROR | E_SEARCHPOS)
+#define W_PROPERTY_DELETED		(29 | E_WARNING | E_SEARCHPOS)
+#define E4_MOVE_SETUP_MIXED		(30 | E_ERROR4  | E_SEARCHPOS)
 
-#define E_ANNOTATE_NOT_UNIQUE	(41 | ERROR | SEARCH_POS)
-#define E4_BM_TE_IN_NODE		(42 | ERROR4 | SEARCH_POS)
-#define E_ANNOTATE_WITHOUT_MOVE (43 | ERROR | SEARCH_POS)
-#define E4_GINFO_ALREADY_SET	(44 | ERROR4 | SEARCH_POS)
-#define WS_ROOT_PROP_DIFFERS	(45 | WARNING_STRICT | SEARCH_POS)
-#define FE_UNKNOWN_FILE_FORMAT	(46 | FATAL_ERROR | SEARCH_POS)
-#define E_SQUARE_AS_RECTANGULAR	(47 | ERROR | SEARCH_POS)
-#define FE_MISSING_SOURCE_FILE	(48 | FATAL_ERROR)
-#define FE_BAD_PARAMETER		(49 | FATAL_ERROR)
-#define E_BOARD_TOO_BIG			(50 | ERROR | SEARCH_POS)
+#define WS_LONG_PROPID			(31 | E_WARNING_STRICT | E_SEARCHPOS)
+#define E_ROOTP_NOT_IN_ROOTN	(32 | E_ERROR | E_SEARCHPOS)
+#define E4_FAULTY_GC			(33 | E_ERROR4 | E_SEARCHPOS | E_VALUE)
+#define E_CRITICAL_NOT_SAVED	(34 | E_ERROR)
+#define WS_UNKNOWN_PROPERTY		(35 | E_WARNING_STRICT | E_SEARCHPOS)
+#define E_MISSING_SEMICOLON		(36 | E_ERROR | E_CRITICAL | E_SEARCHPOS)
+#define E_TWO_MOVES_IN_NODE		(37 | E_ERROR | E_SEARCHPOS)
+#define E_POSITION_NOT_UNIQUE	(38 | E_ERROR | E_SEARCHPOS | E_VALUE | E_DEL_DOUBLE)
+#define WS_ADDSTONE_REDUNDANT	(39 | E_WARNING_STRICT|E_SEARCHPOS|E_DEL_DOUBLE)
+#define WS_PROPERTY_NOT_IN_FF	(40 | E_WARNING_STRICT | E_SEARCHPOS)
 
-#define E_VERSION_CONFLICT		(51 | ERROR | CRITICAL | SEARCH_POS)
-#define E_BAD_VW_VALUES			(52 | ERROR | SEARCH_POS)
-#define FE_DEST_NAME_TOO_LONG	(53 | FATAL_ERROR)
-#define E_VALUES_WITHOUT_ID		(54 | ERROR | CRITICAL | SEARCH_POS)
-#define W_EMPTY_NODE_DELETED	(55 | WARNING | SEARCH_POS)
-#define W_VARLEVEL_UNCERTAIN	(56 | WARNING | SEARCH_POS)
-#define W_VARLEVEL_CORRECTED	(57 | WARNING | SEARCH_POS)
-#define WS_ILLEGAL_MOVE			(58 | WARNING_STRICT | SEARCH_POS)
-#define W_INT_KOMI_FOUND		(59 | WARNING | SEARCH_POS)
+#define E_ANNOTATE_NOT_UNIQUE	(41 | E_ERROR | E_SEARCHPOS)
+#define E4_BM_TE_IN_NODE		(42 | E_ERROR4 | E_SEARCHPOS)
+#define E_ANNOTATE_WITHOUT_MOVE (43 | E_ERROR | E_SEARCHPOS)
+#define E4_GINFO_ALREADY_SET	(44 | E_ERROR4 | E_SEARCHPOS)
+#define WS_ROOT_PROP_DIFFERS	(45 | E_WARNING_STRICT | E_SEARCHPOS)
+#define FE_UNKNOWN_FILE_FORMAT	(46 | E_FATAL_ERROR | E_SEARCHPOS)
+#define E_SQUARE_AS_RECTANGULAR	(47 | E_ERROR | E_SEARCHPOS)
+#define FE_MISSING_SOURCE_FILE	(48 | E_FATAL_ERROR)
+#define FE_BAD_PARAMETER		(49 | E_FATAL_ERROR)
+#define E_BOARD_TOO_BIG			(50 | E_ERROR | E_SEARCHPOS)
 
-#define E_MORE_THAN_ONE_TREE	(60 | ERROR)
-#define W_HANDICAP_NOT_SETUP	(61 | WARNING | SEARCH_POS)
-#define W_SETUP_AFTER_ROOT		(62 | WARNING | SEARCH_POS)
-#define W_MOVE_OUT_OF_SEQUENCE	(63 | WARNING | SEARCH_POS)
-#define E_TOO_MANY_VARIATIONS	(64 | ERROR | SEARCH_POS)
-#define E_FF4_PASS_IN_OLD_FF	(65 | ERROR | SEARCH_POS)
-#define E_NODE_OUSIDE_VAR		(66 | ERROR | CRITICAL | SEARCH_POS)
-#define E_MISSING_NODE_START	(67 | ERROR | CRITICAL | SEARCH_POS)
-#define FE_UNKNOWN_LONG_OPTION	(68 | FATAL_ERROR)
+#define E_VERSION_CONFLICT		(51 | E_ERROR | E_CRITICAL | E_SEARCHPOS)
+#define E_BAD_VW_VALUES			(52 | E_ERROR | E_SEARCHPOS)
+#define FE_DEST_NAME_TOO_LONG	(53 | E_FATAL_ERROR)
+#define E_VALUES_WITHOUT_ID		(54 | E_ERROR | E_CRITICAL | E_SEARCHPOS)
+#define W_EMPTY_NODE_DELETED	(55 | E_WARNING | E_SEARCHPOS)
+#define W_VARLEVEL_UNCERTAIN	(56 | E_WARNING | E_SEARCHPOS)
+#define W_VARLEVEL_CORRECTED	(57 | E_WARNING | E_SEARCHPOS)
+#define WS_ILLEGAL_MOVE			(58 | E_WARNING_STRICT | E_SEARCHPOS)
+#define W_INT_KOMI_FOUND		(59 | E_WARNING | E_SEARCHPOS)
+
+#define E_MORE_THAN_ONE_TREE	(60 | E_ERROR)
+#define W_HANDICAP_NOT_SETUP	(61 | E_WARNING | E_SEARCHPOS)
+#define W_SETUP_AFTER_ROOT		(62 | E_WARNING | E_SEARCHPOS)
+#define W_MOVE_OUT_OF_SEQUENCE	(63 | E_WARNING | E_SEARCHPOS)
+#define E_TOO_MANY_VARIATIONS	(64 | E_ERROR | E_SEARCHPOS)
+#define E_FF4_PASS_IN_OLD_FF	(65 | E_ERROR | E_SEARCHPOS)
+#define E_NODE_OUSIDE_VAR		(66 | E_ERROR | E_CRITICAL | E_SEARCHPOS)
+#define E_MISSING_NODE_START	(67 | E_ERROR | E_CRITICAL | E_SEARCHPOS)
+#define FE_UNKNOWN_LONG_OPTION	(68 | E_FATAL_ERROR)
 
 #define MAX_ERROR_NUM			68

@@ -282,9 +282,9 @@ void Correct_Variation(struct Node *n)
 			i->child = NULL;
 			i = i->sibling;
 
-			Del_Node(j->parent, NO_ERROR);	/* delete SETUP node */
+			Del_Node(j->parent, E_NO_ERROR);	/* delete SETUP node */
 
-			j->parent = p->parent;			/* move tree to new level */
+			j->parent = p->parent;				/* move tree to new level */
 			k = p;
 			while(k->sibling)
 				k = k->sibling;
@@ -490,7 +490,7 @@ void Calc_GameSig(struct Node *r, struct TreeInfo *ti)
 *** Returns:	-
 **************************************************************************/
 
-void Split_Node(struct Node *n, USHORT flags, token id, int move)
+void Split_Node(struct Node *n, U_SHORT flags, token id, int move)
 {
 	struct Property *p, *hlp;
 	struct Node *newnode;
@@ -526,7 +526,7 @@ void Split_Node(struct Node *n, USHORT flags, token id, int move)
 int Split_MoveSetup(struct Node *n)
 {
 	struct Property *p, *s = NULL;
-	USHORT f, sc = 0;
+	U_SHORT f, sc = 0;
 
 	p = n->prop;
 	f = 0;
@@ -830,7 +830,7 @@ void Check_SGFTree(struct Node *r, struct BoardStatus *old)
 			}
 
 			if(st->msize)
-				SaveMalloc(USHORT *, st->markup, st->msize, "markup buffer");
+				SaveMalloc(U_SHORT *, st->markup, st->msize, "markup buffer");
 
 			st->mrkp_chngd = TRUE;
 		}
@@ -847,9 +847,9 @@ void Check_SGFTree(struct Node *r, struct BoardStatus *old)
 				memset(st->board, 0, st->bsize);
 			}
 
-			st->msize = st->bwidth * sgfc->info->bheight * sizeof(USHORT);
+			st->msize = st->bwidth * sgfc->info->bheight * sizeof(U_SHORT);
 			if(st->msize)
-				SaveMalloc(USHORT *, st->markup, st->msize, "markup buffer");
+				SaveMalloc(U_SHORT *, st->markup, st->msize, "markup buffer");
 			st->mrkp_chngd = TRUE;
 		}
 

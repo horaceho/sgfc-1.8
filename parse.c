@@ -24,7 +24,7 @@
 *** Returns:	-1/0/1 for corrected error / error / OK
 **************************************************************************/
 
-int Parse_Number(char *value, USHORT dummy)
+int Parse_Number(char *value, U_SHORT dummy)
 {
 	long i;
 	int ret = 1;
@@ -68,7 +68,7 @@ int Parse_Number(char *value, USHORT dummy)
 *** Returns:	length of converted string (0 for empty string)
 **************************************************************************/
 
-int Parse_Text(char *value, USHORT flags)
+int Parse_Text(char *value, U_SHORT flags)
 {
 	char *s, *d, old = 0, nl;
 
@@ -196,7 +196,7 @@ int Parse_Text(char *value, USHORT flags)
 *** Returns:	-1/0/1	for corrected error / error / OK
 **************************************************************************/
 
-int Parse_Move(char *value, USHORT pos)
+int Parse_Move(char *value, U_SHORT pos)
 {
 	int ret = 1, c;
 
@@ -258,11 +258,11 @@ int Parse_Move(char *value, USHORT pos)
 *** Returns:	-1/0/1/2 for corrected error / error / OK / corrected
 **************************************************************************/
 
-int Parse_Float(char *value, USHORT flags)
+int Parse_Float(char *value, U_SHORT flags)
 {
 	int ret = 1, where = 0;
 	/* where (bits): 0-minus / 1-int / 2-fraction / 3-'.' / 4-plus */
-	ULONG i;
+	U_LONG i;
 	char *s, *d;
 	char *allowed = (flags & TYPE_GINFO) ? "0123456789.," : "0123456789+-.,";
 
@@ -364,7 +364,7 @@ int Parse_Float(char *value, USHORT flags)
 *** Returns:	-1/0/1	for corrected error / error / OK
 **************************************************************************/
 
-int Parse_Color(char *value, USHORT dummy)
+int Parse_Color(char *value, U_SHORT dummy)
 {
 	int ret = 1;
 
@@ -401,7 +401,7 @@ int Parse_Color(char *value, USHORT dummy)
 *** Returns:	-1/0/1	for corrected error / error / OK
 **************************************************************************/
 
-int Parse_Triple(char *value, USHORT dummy)
+int Parse_Triple(char *value, U_SHORT dummy)
 {
 	int ret = 1;
 
@@ -440,8 +440,8 @@ int Parse_Triple(char *value, USHORT dummy)
 *** Returns:	TRUE for success / FALSE if value has to be deleted
 **************************************************************************/
 
-int Check_Value(struct Property *p, struct PropValue *v, USHORT flags,
-				int (*Parse_Value)(char *, USHORT))
+int Check_Value(struct Property *p, struct PropValue *v, U_SHORT flags,
+				int (*Parse_Value)(char *, U_SHORT))
 {
 	switch((*Parse_Value)(v->value, flags))
 	{

@@ -36,7 +36,7 @@ extern char *option_outfile;
 
 /**** load.c ****/
 
-void CopyValue(char *, char *, ULONG , int );
+void CopyValue(char *, char *, U_LONG , int );
 struct PropValue *Add_PropValue(struct Property *, char *, char *,
 								long, char *, long);
 struct Property *Add_Property(struct Node *, token , char *, char *);
@@ -58,15 +58,15 @@ extern struct SGFToken sgf_token[];
 
 /**** parse.c ****/
 
-int Parse_Number(char * , USHORT );
-int Parse_Text(char * , USHORT );
-int Parse_Move(char * , USHORT );
-int Parse_Float(char * , USHORT );
-int Parse_Color(char * , USHORT );
-int Parse_Triple(char * , USHORT );
+int Parse_Number(char * , U_SHORT );
+int Parse_Text(char * , U_SHORT );
+int Parse_Move(char * , U_SHORT );
+int Parse_Float(char * , U_SHORT );
+int Parse_Color(char * , U_SHORT );
+int Parse_Triple(char * , U_SHORT );
 
-int Check_Value(struct Property *, struct PropValue *, USHORT ,
-				int (*)(char *, USHORT));
+int Check_Value(struct Property *, struct PropValue *, U_SHORT ,
+				int (*)(char *, U_SHORT));
 int Check_Text(struct Property *, struct PropValue *);
 int Check_Label(struct Property *, struct PropValue *);
 int Check_Pos(struct Property *, struct PropValue *);
@@ -81,7 +81,7 @@ void Check_Properties(struct Node *, struct BoardStatus *);
 int ExpandPointList(struct Property *, struct PropValue *, int );
 void CompressPointList(struct Property * );
 
-void Split_Node(struct Node *, USHORT, token, int);
+void Split_Node(struct Node *, U_SHORT, token, int);
 void ParseSGF(struct SGFInfo * );
 
 
@@ -101,7 +101,7 @@ int Do_View(struct Node *, struct Property *, struct BoardStatus *);
 /**** gameinfo.c ****/
 
 int Check_GameInfo(struct Property *, struct PropValue *);
-int PromptGameInfo(struct Property *, struct PropValue *, int (*)(char *, USHORT));
+int PromptGameInfo(struct Property *, struct PropValue *, int (*)(char *, U_SHORT));
 
 
 /**** util.c ****/
@@ -113,7 +113,7 @@ extern int ignored_count;
 extern char error_enabled[MAX_ERROR_NUM];
 
 void SearchPos(char * , char * , int * , int * );
-int PrintError(ULONG , ... );
+int PrintError(U_LONG , ... );
 
 int  DecodePosChar(char );
 char EncodePosChar(int );
@@ -125,14 +125,14 @@ void f_Enqueue(struct ListHead * , struct ListNode * );
 void f_Delete(struct ListHead * , struct ListNode * );
 
 int strnccmp(char * , char * , int);
-ULONG Kill_Chars(char * , USHORT , char * );
-ULONG Test_Chars(char * , USHORT , char * );
+U_LONG Kill_Chars(char * , U_SHORT , char * );
+U_LONG Test_Chars(char * , U_SHORT , char * );
 
 struct Property *Find_Property(struct Node *, token );
 
 struct PropValue *Del_PropValue(struct Property *, struct PropValue *);
 struct Property *Del_Property(struct Node *, struct Property *);
-struct Node *Del_Node(struct Node *, ULONG);
+struct Node *Del_Node(struct Node *, U_LONG);
 
 struct Property *New_PropValue(struct Node *, token, char *, char *, int);
 
