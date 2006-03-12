@@ -58,8 +58,8 @@ SGFC is intended to be a tool for SGF experts, coders and maintainers of
 large SGF archives. You ought to have quite some knowledge of SGF to use
 SGFC efficiently.
 
-SGFC was written primarily for Go/WeiQi/Baduk (GM[1]) files. It can't handle
-other games yet, i.e. it doesn't check any game-specific properties and
+SGFC was written primarily for Go/WeiQi/Baduk (GM[1]) files. It can not handle
+other games yet, i.e. it does not check any game-specific properties and
 values of other games than Go. It may even save errornous game-specific
 properties of other games! Use SGFC for other games with care.
 
@@ -102,7 +102,7 @@ execute.c     contains routines that actually execute the properties,
 strict.c      contains the functions for restrictive checking (option -r)
 util.c        misc. functions; error messages
 test.sgf      a SGF file to test all messages of SGFC
-Makefile      Makefile as used for gcc on my Amiga and on an AIX Unix system
+Makefile      Makefile as used for gcc on my machine
 README        this file
 COPYING       the BSD License
 
@@ -116,19 +116,19 @@ readable source with reasonable indentations.
 =========================
 
 If you've an ANSI compliant C compiler on your system just type 'make'.
-The include files have to be ANSI compliant too! If your system doesn't fit
+The include files have to be ANSI compliant too! If your system does not fit
 these requirements then ask a local system guru to help you.
 
 Note: on some machines, you may have to specify a shell and the processor
       type in the Makefile -- in that case you have to edit the Makefile.
-      Right now it doesn't specify either in order to be machine independet.
+      Right now it does not specify either in order to be machine independet.
       See additional defines below too.
 
-      If your compiler doesn't know the ANSI function strerror(), but is
+      If your compiler does not know the ANSI function strerror(), but is
       otherwise ANSI compliant, then you can define NO_STRERROR in the
       file util.c in order to get rid of this compiler error.
 
-If you're compiling SGFC manually then just compile each file to get the
+If you are compiling SGFC manually then just compile each file to get the
 object files and link those object files together (using a proper link
 library).
 
@@ -151,22 +151,21 @@ DIRTY_FREE:
 SGFC calls malloc()/free() for every structure or value (nodes,
 properties, etc.) - thus an average file causes 2000-5000 calls to free(),
 large files up to 50000-150000 calls.
-On most systems free() is awfully slow, thus SGFC uses most of its time
+On some (old) systems free() is awefully slow, thus SGFC uses most of its time
 to free the structures it has allocated. But almost all compilers/OS systems
-clean up on program exit anyway - which is MUCH faster (up to 10 times!).
+clean up on program exit anyway (up to 10 times faster).
 
-Therefore DIRTY_FREE is defined at the head of 'all.h' which inhibits
+Therefore DIRTY_FREE can be defined at the head of 'all.h' which inhibits
 calls to free() on exit.
-If you're losing memory (about 3 times the file size) then your OS/compiler
-doesn't clean up and you've to remove this define to avoid memory loss.
-SGFC will get slower though.
+If you are losing memory (about 3 times the file size) then your OS/compiler
+does not clean up and you cannot use this define.
 
 
 VERSION_NO_MAIN:
 ----------------
 
 In case you've written a new main() function, e.g. a nice GUI, you can use
-this define, so that main() doesn't get compiled.
+this define, so that main() does not get compiled.
 
 
 
@@ -207,7 +206,7 @@ Conversion to FF[4] takes place only if you specify the 'outfile'.
     -p  ... write pass moves as '[tt]' if possible
     -r  ... restrictive checking
     -s  ... split game collection into single files
-    -t  ... don't insert any soft linebreaks into text values
+    -t  ... do not insert any soft linebreaks into text values
     -u  ... delete unknown properties
     -v  ... correct variation level and root moves
     -w  ... disable warning messages
@@ -248,7 +247,7 @@ Option -b:
 Select method for searching the beginning of SGF data.
 
 SGF files may be preceeded by plain text. In most cases this is an
-email header which hasn't been removed.
+email header which has not been removed.
 
 In order to find the SGF data SGFC searches for '(;' which marks the
 beginning. But some errornous files mark the beginning only with '('.
@@ -257,9 +256,9 @@ this search might go wrong (in seldom cases).
 
 In that case specify
     -b2 ... the first '(;' is searched.
-            Note: missing ';' at the beginning can't be detected
+            Note: missing ';' at the beginning can not be detected
     -b3 ... the first '(' is searched.
-            Note: This is the best choice if the SGF data isn't preceeded
+            Note: This is the best choice if the SGF data is not preceeded
             by plain text. If there's text in front of the SGF data then
             it's likely that problems will occur.
 
@@ -283,10 +282,10 @@ Disable message number -n-.
 SGFC is a rather pedantic syntax checker.
 If you want to limit the number of messages you get then specify this
 option. With '-d' it's possible to disable specific messages.
-Fatal error messages can't be disabled.
+Fatal error messages can not be disabled.
 
 Hint: there are messages which can be printed up to 100 times, but which
-aren't really critical. This messages are
+are not really critical. This messages are
 Warning 24: removed empty value (e.g. 'C[]')
 Warning 29: deleted property <x> (when specifying -o or -yXX)
 Warning 40: property not part of FF[x] (e.g. FF[3] file without FF[] property)
@@ -323,7 +322,7 @@ The output looks like:
 
 "Game signature - tree 1: 'onqsrq lporke'" (ear reddening move game)
 or
-"Game signature - tree 2: contains GM[12] - can't calculate signature"
+"Game signature - tree 2: contains GM[12] - can not calculate signature"
 
 
 Option -i:
@@ -343,7 +342,7 @@ syntax errors. Note: no trailing or preceeding spaces, case sensitive check.
 To make it a little easier for you, SGFC tries to correct your input
 and if successful provides it as default value the next time your asked.
 
-Hint: this can be (mis-)used to input values the way you're used to, e.g.:
+Hint: this can be (mis-)used to input values the way you are used to, e.g.:
 date:   "14 apr 97"
 result: "black wins by resignation"
 time:   "9 hours"
@@ -355,7 +354,7 @@ Option -k:
 Keep header in front of SGF data.
 
 SGF files may be preceeded by plain text. In most cases this is an
-email header which hasn't been removed.
+email header which has not been removed.
 By default SGFC removes this header as it contains no SGF relevant
 information.
 
@@ -393,7 +392,7 @@ Option -n:
 Delete empty nodes.
 
 Removes nodes which contain no properties.
-There are empty nodes which can't be deleted. These nodes are:
+There are empty nodes which can not be deleted. These nodes are:
 
 - root node if it has more than one child
 - a node which has siblings and has more than one child
@@ -405,7 +404,7 @@ Delete obsolete/unknown properties.
 
 SGFC knows all FF[4] properties (general ones and Go specific ones) and
 all FF[1]-FF[3] properties defined by the specifications of Anders Kierulf
-and Martin Müller (it doen't know all SGB properties though).
+and Martin Müller (it does not know all SGB properties though).
 I.e. any unknown property encountered is likely to be a private property
 of the application used to write this file.
 
@@ -421,7 +420,7 @@ Option -p:
 ----------
 Write pass moves as '[tt]' if possible.
 
-FF[4] allows writing pass moves as '[]'. Older appplications can't deal with
+FF[4] allows writing pass moves as '[]'. Older appplications can not deal with
 this value. If you are concerned about compatibility to old applications
 you should avoid the new format and specify this option.
 
@@ -461,14 +460,14 @@ Example: 'sgfc -s in.sgf out' produces 'out_001.sgf', 'out_002.sgf' etc.
 
 Option -t:
 ----------
-Don't insert soft linebreaks into text.
+Do not insert soft linebreaks into text.
 
 FF[4] specifies two types of linebreaks: hard and soft ones.
 Soft linebreaks are linebreaks which are not displayed.
 By default SGFC inserts soft linebreaks wherever necessary to limit the
 line length to 76 chars.
 
-However old applications can't deal with soft linebreaks.
+However old applications can not deal with soft linebreaks.
 If you are concerned about compatibility to old applications you should
 avoid soft linebreaks and specify this option.
 
@@ -588,17 +587,17 @@ Invoking SGFC without any parameters and input file test.sgf should yield:
 50 errors and 18 warnings - 11 messages are critical.
 Invoking SGFC with 'sgfc -oun test.sgf' should yield 12 warnings more.
 
-Following errors can't be tested from within the test file:
+Following errors can not be tested from within the test file:
 
 Fatal error 1: error in commandline: e.g. 'sgfc in.sgf out.sgf foo'
 Fatal error 2: error in commandline: e.g. 'sgfc -x in.sgf'
-Fatal error 3: couldn't open source file
-Fatal error 4: couldn't read source file 
+Fatal error 3: could not open source file
+Fatal error 4: could not read source file 
 Fatal error 5: not enough memory
 Fatal error 7: no SGF data found: e.g. 'sgfc COPYING'
 Error 9: variation nesting incomplete: add ']' to the end of test.sgf
-Fatal error 26: couldn't open destination file
-Fatal error 27: couldn't write destination file
+Fatal error 26: could not open destination file
+Fatal error 27: could not write destination file
 Error 34: critical file not saved: e.g. 'sgfc test.sgf out.sgf'
 Fatal error 46: unknown file format: create a file consisting of "(;FF[5])"
 Fatal error 48: no source file specified: e.g. 'sgfc -u'
@@ -724,7 +723,7 @@ V0.6 (1997-05)
 - SGFC exit codes (0/5/10/20): ok/warn/error/fatal error
 - extended date/result/time/komi correction
   (SGFC fixes up to 90% of all bad values now)
-- faulty game-info property values don't get moved to GC any longer
+- faulty game-info property values do not get moved to GC any longer
 - bug fixes (as always :)
 
 V0.5 (1997-04)
@@ -858,23 +857,23 @@ Classes:
 	C  ... critical (by default forbids saving the file)
 
 
- 1:FE   "unknown command '%s' (-? for help)"
+ 1:FE   "unknown command '%s' (-h for help)"
         Example: 'sgfc in.sgf out.sgf foo'
 
- 2:FE   "unknown command line option '%c' (-? for help)"
+ 2:FE   "unknown command line option '%c' (-h for help)"
         Example: 'sgfc -x in.sgf'
 
- 3:FE   "couldn't open source file '%s'"
+ 3:FE   "could not open source file '%s'"
 
- 4:FE   "couldn't read source file '%s'"
+ 4:FE   "could not read source file '%s'"
 
- 5:FE   "couldn't allocate %s (not enough memory)"
+ 5:FE   "could not allocate %s (not enough memory)"
 
  6:W-C  "possible SGF data found in front of game-tree (before '(;')"
         Example: >>bla[aa] (;GM[1];B[cc];)<<
         Note: searches for '[(lc)(lc)]'
 
- 7:FE   "couldn't find start mark '(;' - no SGF data found"
+ 7:FE   "could not find start mark '(;' - no SGF data found"
         Example: simple text file
 
  8:E-C  "illegal char(s) found: "
@@ -889,7 +888,7 @@ Classes:
         Example: >>(;B[cc<<
 
 11:E-C  "property identifier too long - more than 100 chars (deleted)"
-        Note: indicates that file isn't a SGF file
+        Note: indicates that file is not a SGF file
 
 12:E    "empty variation found (ignored)"
         Example: >>(;B[cc]())<<
@@ -913,8 +912,8 @@ Classes:
 18:E    "illegal root property <%s> found (%s)" (action taken)
         Example: >>(;FF[four]GM[Go]SZ[-12])<<
 
-19:W-C  "game stored in tree %d is not Go. Can't check move & position type"
-        " -> errors won't get corrected!"
+19:W-C  "game stored in tree %d is not Go. Can not check move & position type"
+        " -> errors will not get corrected!"
         Example: >>(;GM[12])<<
 
 20:E-C  "property <%s> without any values (ignored)"
@@ -926,7 +925,7 @@ Classes:
         Example: >>(;B[cc]((;W[dd])<<
 
 22:W    "$00 byte deleted - binary file?"
-        Note: SGFC can't handle $00 bytes in property values
+        Note: SGFC can not handle $00 bytes in property values
 
 23:E    "property <%s> expects compose type value (value deleted): "
         Example: >>(;LB[aa][bb][çc])<<
@@ -937,8 +936,8 @@ Classes:
 25:E    "illegal <%s> corrected; new value: [%s:%s], old value: "
         Example: >>(;LB[a a: text])<<
 
-26:FE   "couldn't open destination file '%s'"
-27:FE   "couldn't write destination file '%s'"
+26:FE   "could not open destination file '%s'"
+27:FE   "could not write destination file '%s'"
 
 28:E    "property <%s> already exists %s" (merged/deleted)
         Example: >>(;C[text1][text2]LB[aa:1]LB[bb:2];W[aa]W[bb])<<
@@ -978,7 +977,7 @@ Classes:
 39:W    "AddStone <%s> has no effect (deleted) - value: "
         Example: >>(;B[cc];AB[cc])<<
 
-40:W    "property <%s> isn't defined in FF[%d] (%s)" (ok/converted/deleted)
+40:W    "property <%s> is not defined in FF[%d] (%s)" (ok/converted/deleted)
         Example: >>(;FF[4];L[aa][bb][cc])BS[1])<<
 
 41:E    "annotation property <%s> contradicts previous property (deleted)"
@@ -1012,7 +1011,7 @@ Classes:
 50:E    "board size too big (corrected to %dx%d)"
         Example: >>(;SZ[1000])<< or >>(;FF[4]SZ[10:53])<<
 
-51:E-C  "used feature isn't defined in FF[%d] (parsing done anyway)"
+51:E-C  "used feature is not defined in FF[%d] (parsing done anyway)"
         Example: >>(;FF[2]SZ[13:9])<< or >>(;FF[3];AB[aa:ee])<<
 
 52:E    "<VW> property: %s (%s)" (various error cases for FF[3],FF[4]) (action)
@@ -1027,7 +1026,7 @@ Classes:
 55:W	"empty node deleted"
         Example: >>(;;;C[empty])<< and invoke sgfc with option '-n'
 
-56:W	"possible incorrect variation level can't be corrected"
+56:W	"possible incorrect variation level can not be corrected"
         Example: >>(;B[dd];W[aa](;B[bb])(;AE[aa];W[ba])(;AE[dd][aa];B[ef]))<<
 
 57:W	"variation level corrected"
@@ -1062,4 +1061,7 @@ Classes:
 
 67:E-C  "illegal chars after variation start '(' found. Missing ';' assumed."
         Example: >>(;FF[4];C[var 1]) (C[var 2]))<<
+
+68:FE   "unknown command line option '%s' (-h for help)"
+        Example: 'sgfc --versi'
 
