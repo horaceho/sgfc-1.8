@@ -233,7 +233,7 @@ void SetRootProps(struct TreeInfo *info, struct Node *r)
 		return;
 
 	New_PropValue(r, TKN_FF, "4", NULL, TRUE);
-	New_PropValue(r, TKN_AP, "SGFC", "1.15", TRUE);
+	New_PropValue(r, TKN_AP, "SGFC", "1.16", TRUE);
 
 	if(info->GM == 1)			/* may be default value without property */
 		New_PropValue(r, TKN_GM, "1", NULL, TRUE);

@@ -3,7 +3,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 all.h
 ***
-*** Copyright (C) 1996-2005 by Arno Hollosi
+*** Copyright (C) 1996-2006 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 *** Notes:	global definition of all #defines and structures

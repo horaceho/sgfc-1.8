@@ -1,7 +1,7 @@
-SGF Syntax Checker & Converter: SGFC V1.15
+SGF Syntax Checker & Converter: SGFC V1.16
 ==========================================
 
-SGFC Copyright (C) 1996-2005 by Arno Hollosi <ahollosi@xmp.net>
+SGFC Copyright (C) 1996-2006 by Arno Hollosi <ahollosi@xmp.net>
 
 SGFC is open source software and is published under the terms of the
 BSD License. Read 'COPYING' for more information.
@@ -623,6 +623,11 @@ to read in this file :-)
 Appendix B: History
 ===================
 
+V1.16 (2006-08-06)
+------------------
+- fixed memory leak (reported by Dmitry Kamenetsky)
+
+
 V1.15 (2005-03-19)
 ------------------
 
@@ -636,7 +641,7 @@ V1.15 (2005-03-19)
   non-empty ones now (e.g. PW[][white] becomes PW[white] instead of PW[])
 - BUGFIX: RE[W++1.0] is flagged as an error now (reported by Matthias Krings)
 - some code cleanup so that strict compilers issue no warnings and compiling
-  with C++ compilers works
+  with C++ compilers works (suggestion by SunXi)
 
 
 V1.14 (2003-06-09)
