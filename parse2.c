@@ -814,11 +814,11 @@ void Check_SGFTree(struct Node *r, struct BoardStatus *old)
 	struct BoardStatus *st;
 
 	SaveMalloc(struct BoardStatus *, st, sizeof(struct BoardStatus), "board status buffer");
-	st->board = NULL;
-	st->markup = NULL;
 
 	while(r)
 	{
+		st->board = NULL;
+		st->markup = NULL;
 		if(old)
 		{
 			memcpy(st, old, sizeof(struct BoardStatus));
@@ -878,10 +878,10 @@ void Check_SGFTree(struct Node *r, struct BoardStatus *old)
 		}
 
 		r = r->sibling;
+		if(st->board)	free(st->board);
+		if(st->markup)	free(st->markup);
 	}
 
-	if(st->board)	free(st->board);
-	if(st->markup)	free(st->markup);
 	free(st);
 }
 
