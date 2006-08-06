@@ -138,7 +138,7 @@ int Do_Move(struct Node *n, struct Property *p, struct BoardStatus *st)
 
 	x = DecodePosChar(p->value->value[0]) - 1;
 	y = DecodePosChar(p->value->value[1]) - 1;
-	color = sgf_token[p->id].data;
+	color = (char)sgf_token[p->id].data;
 
 	if(st->board[MXY(x,y)])
 		PrintError(WS_ILLEGAL_MOVE, p->buffer);
@@ -182,7 +182,7 @@ int Do_Addstones(struct Node *n, struct Property *p, struct BoardStatus *st)
 	h.value = NULL;
 	h.valend = NULL;
 
-	color = sgf_token[p->id].data;
+	color = (char)sgf_token[p->id].data;
 
 	v = p->value;
 	while(v)
