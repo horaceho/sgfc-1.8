@@ -48,6 +48,7 @@ char option_write_critical = FALSE;
 char option_interactive = FALSE;
 char option_linebreaks = 1;
 char option_softlinebreaks = TRUE;
+char option_nodelinebreaks = FALSE;
 char option_expandcpl = FALSE;
 char option_pass_tt = FALSE;
 char option_fix_variation = FALSE;
@@ -92,6 +93,7 @@ void PrintHelp(int everything)
 		"              2 - any linebreak not preceeded by a space (MGT)\n"
 		"              3 - two linebreaks in a row\n"
 		"              4 - paragraph style (ISHI format, MFGO)\n"
+		"    -L  ... try to keep linebreaks at the end of nodes\n"
 		"    -m  ... delete markup on current move\n"
 		"    -n  ... delete empty nodes\n"
 		"    -o  ... delete obsolete properties\n"
@@ -147,6 +149,7 @@ int ParseArgs(int argc, char *argv[])
 						case 'e':	option_expandcpl = TRUE;			break;
 						case 'k':	option_keep_head = TRUE;			break;
 						case 't':	option_softlinebreaks = FALSE;		break;
+						case 'L':	option_nodelinebreaks = TRUE;		break;
 						case 'p':	option_pass_tt = TRUE;				break;
 						case 's':	option_split_file = TRUE;			break;
 						case 'n':	option_del_empty_nodes = TRUE;		break;
