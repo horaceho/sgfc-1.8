@@ -185,7 +185,7 @@ Conversion to FF[4] takes place only if you specify the 'outfile'.
 ----------------------------------
 
     -h  ... print a short help message
-    -bx ... Beginning of SGF data is detected by\n"
+    -bx ... Beginning of SGF data is detected by
                 1 - advanced search algorithm (default)
                 2 - first occurence of '(;'
                 3 - first occurence of '('
@@ -200,6 +200,7 @@ Conversion to FF[4] takes place only if you specify the 'outfile'.
                 2 - any linebreak not preceeded by a space (MGT)
                 3 - two linebreaks in a row
                 4 - paragraph style (ISHI format, MFGO)
+    -L  ... try to keep linebreaks at the end of nodes
     -m  ... delete markup on current move
     -n  ... delete empty nodes
     -o  ... delete obsolete properties
@@ -375,6 +376,15 @@ During reading, a hard linebreak is
         2 - any linebreak not preceeded by a space (MGT)
         3 - two linebreaks in a row
         4 - paragraph style (ISHI format, MFGO)
+
+
+Option -L:
+----------
+Try to keep linebreaks at the end of nodes.
+
+When writing the output file, SGFC will try to make each line end at
+the end of a node.  This is purely cosmetic, but may make the
+resulting SGF file easier to read or edit.
 
 
 Option -m:

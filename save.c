@@ -17,9 +17,19 @@
 
 
 int save_linelen;
+int save_chars_in_node;
+int save_eol_in_node;
 
 #define MAX_LINELEN		58
 #define MAXTEXT_LINELEN 70
+
+/* This is used when option_nodelinebreaks is set, so we are
+   attempting to put linebreaks at the end of nodes.  A value near
+   MAX_LINELEN is desirable so that we don't make lines much shorter
+   or longer than we get without this option.  A value of 60 works out
+   well.  If nodes are of the form ";B[xx]", we'll get exactly 10 of
+   them per line, just like we would get without this option set. */
+#define	MAX_PREDICTED_LINELEN	60
 
 #define saveputc(f,c) { if(!WriteChar((f), (c), FALSE))	return(FALSE);	}
 
@@ -40,6 +50,7 @@ int save_linelen;
 
 int WriteChar(FILE *sfile, char c, int spc)
 {
+	save_chars_in_node++;
 
 	if(spc && isspace(c) && (save_linelen >= MAXTEXT_LINELEN))
 		c = '\n';
@@ -53,6 +64,7 @@ int WriteChar(FILE *sfile, char c, int spc)
 	}
 	else
 	{
+		save_eol_in_node = 1;
 		save_linelen = 0;
 
 #if EOLCHAR
@@ -200,6 +212,8 @@ int WriteProperty(struct TreeInfo *info, struct Property *prop, FILE *sfile)
 int WriteNode(struct TreeInfo *info, struct Node *n, FILE *sfile)
 {
 	struct Property *p;
+	save_chars_in_node = 0;
+	save_eol_in_node = 0;
 	saveputc(sfile, ';')
 
 	p = n->prop;
@@ -214,6 +228,12 @@ int WriteNode(struct TreeInfo *info, struct Node *n, FILE *sfile)
 
 		p = p->next;
 	}
+
+	if(option_nodelinebreaks &&
+	   ((save_eol_in_node && save_linelen > 0) ||
+		(!save_eol_in_node &&
+		 save_linelen > MAX_PREDICTED_LINELEN - save_chars_in_node)))
+		saveputc(sfile, '\n');
 
 	return(TRUE);
 }
@@ -256,7 +276,7 @@ void SetRootProps(struct TreeInfo *info, struct Node *r)
 
 int WriteTree(struct TreeInfo *info, struct Node *n, FILE *sfile, int newlines)
 {
-	if(newlines)
+	if(newlines && save_linelen > 0)
 		saveputc(sfile, '\n')
 
 	SetRootProps(info, n);
@@ -337,6 +357,8 @@ void SaveSGF(struct SGFInfo *sgf)
 	}
 
 	save_linelen = 0;
+	save_chars_in_node = 0;
+	save_eol_in_node = 0;
 
 	n = sgf->root;
 	info = sgf->tree;

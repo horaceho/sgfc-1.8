@@ -23,6 +23,7 @@ extern char option_write_critical;
 extern char option_interactive;
 extern char option_linebreaks;
 extern char option_softlinebreaks;
+extern char option_nodelinebreaks;
 extern char option_expandcpl;
 extern char option_findstart;
 extern char option_pass_tt;
