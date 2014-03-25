@@ -3,18 +3,13 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 all.h
 ***
-*** Copyright (C) 1996-2006 by Arno Hollosi
+*** Copyright (C) 1996-2014 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 *** Notes:	global definition of all #defines and structures
 ***
 **************************************************************************/
 
-
-/*#define DIRTY_FREE */	/* don't call free() on program exit
-						** because it takes a LOT of time and the OS or the
-						** compiler clean up anyway (which is much faster)
-						*/
 
 /* #define VERSION_NO_MAIN */		/* In case you've written a new main()
 									** e.g. for writing a mouse-interface
@@ -99,6 +94,8 @@ typedef enum {
 
 #define ST_OBSOLETE		0x8000	/* obsolete props which are converted */
 
+#define PARSE_MOVE      0x0001  /* flags for Parse_Move */
+#define PARSE_POS       0x0002
 
 #define MAX_BOARDSIZE	52
 

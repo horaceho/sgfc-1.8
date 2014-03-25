@@ -1,5 +1,5 @@
 # Makefile for SGFC
-# Copyright (C) 1996-2003 by Arno Hollosi
+# Copyright (C) 1996-2014 by Arno Hollosi
 # (see 'main.c' for more copyright information)
 
 

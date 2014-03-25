@@ -1,7 +1,7 @@
-SGF Syntax Checker & Converter: SGFC V1.16
+SGF Syntax Checker & Converter: SGFC V1.17
 ==========================================
 
-SGFC Copyright (C) 1996-2006 by Arno Hollosi <ahollosi@xmp.net>
+SGFC Copyright (C) 1996-2014 by Arno Hollosi <ahollosi@xmp.net>
 
 SGFC is open source software and is published under the terms of the
 BSD License. Read 'COPYING' for more information.
@@ -143,22 +143,6 @@ used when SGFC writes a file, because SGFC automatically detects any kind
 of linebreak during reading. 
 This define is useful if you want SGFC to write SGF files using the
 linebreak-code specific to your machine (e.g. Mac or MsDos).
-
-
-DIRTY_FREE:
------------
-
-SGFC calls malloc()/free() for every structure or value (nodes,
-properties, etc.) - thus an average file causes 2000-5000 calls to free(),
-large files up to 50000-150000 calls.
-On some (old) systems free() is awefully slow, thus SGFC uses most of its time
-to free the structures it has allocated. But almost all compilers/OS systems
-clean up on program exit anyway (up to 10 times faster).
-
-Therefore DIRTY_FREE can be defined at the head of 'all.h' which inhibits
-calls to free() on exit.
-If you are losing memory (about 3 times the file size) then your OS/compiler
-does not clean up and you cannot use this define.
 
 
 VERSION_NO_MAIN:
@@ -632,6 +616,16 @@ to read in this file :-)
 
 Appendix B: History
 ===================
+
+V1.17 (2009-11-30/2014-03-25)
+------------------
+- fixed broken '\' backslash handling (reported by Matthias Krings)
+- added patch for -L option: try to keep linebreaks at the end of nodes.
+  Patch provided by Eric Backus. Thanks.
+- removed DIRTY_FREE compile option
+- fixed empty DD values (which are allowed and should not be deleted)
+  Thanks to Thien-Thi Nguyen for the bug report & patch.
+
 
 V1.16 (2006-08-06)
 ------------------

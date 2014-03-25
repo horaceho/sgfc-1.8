@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 properties.c
 ***
-*** Copyright (C) 1996-2004 by Arno Hollosi
+*** Copyright (C) 1996-2014 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -16,7 +16,7 @@
 
 int Check_Move(struct Property *p, struct PropValue *v)
 {
-	return(Check_Value(p, v, FALSE, Parse_Move));
+	return(Check_Value(p, v, PARSE_MOVE, Parse_Move));
 }
 
 int Check_Number(struct Property *p, struct PropValue *v)
@@ -119,7 +119,7 @@ struct SGFToken sgf_token[] =
 	{ "CR",	50, FF34,	Check_Pos,	Do_Markup,	CP_LIST|DOUBLE_MERGE, ST_MARKUP },
 	{ "TB",	50, FF1234,	Check_Pos,	Do_Markup,	CP_LIST|DOUBLE_MERGE, ST_TERRITORY },
 	{ "TW",	50, FF1234,	Check_Pos,	Do_Markup,	CP_LIST|DOUBLE_MERGE, ST_TERRITORY },
-	{ "DD",	50, FF4,	Check_Pos,	Do_Markup,	CP_LIST|DOUBLE_MERGE, ST_DIMMED },
+	{ "DD",	50, FF4,	Check_Pos,	Do_Markup,	CP_LIST|DOUBLE_MERGE|PVT_EMPTY, ST_DIMMED },
 	{ "SQ",	50, FF4,	Check_Pos,	Do_Markup,	CP_LIST|DOUBLE_MERGE, ST_MARKUP },
 	{ "SL",	50, FF1234,	Check_Pos,	Do_Markup,	CP_LIST|DOUBLE_MERGE, ST_MARKUP },
 
