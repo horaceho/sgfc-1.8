@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 load.c
 ***
-*** Copyright (C) 1996-2004 by Arno Hollosi
+*** Copyright (C) 1996-2014 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 *** Notes:	Almost all routines in this file return either

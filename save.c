@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 save.c
 ***
-*** Copyright (C) 1996-2004 by Arno Hollosi
+*** Copyright (C) 1996-2014 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -111,7 +111,8 @@ int WritePropValue(char *v, int second, U_SHORT flags, FILE *sfile)
 
 		if(fl && (save_linelen > MAXTEXT_LINELEN))		/* soft linebreak */
 		{
-			if (*v == '\\')				/* if we have just written a '\' then  */
+			if (*v == '\\' && *(v-1) != '\\')
+								 /* if we have just written a single '\' then  */
 				v--;					/* treat it as soft linebreak and set  */
 			else						/* v back so that it is written again. */
 				saveputc(sfile, '\\');	/* else insert soft linebreak */
@@ -253,7 +254,7 @@ void SetRootProps(struct TreeInfo *info, struct Node *r)
 		return;
 
 	New_PropValue(r, TKN_FF, "4", NULL, TRUE);
-	New_PropValue(r, TKN_AP, "SGFC", "1.16", TRUE);
+	New_PropValue(r, TKN_AP, "SGFC", "1.17", TRUE);
 
 	if(info->GM == 1)			/* may be default value without property */
 		New_PropValue(r, TKN_GM, "1", NULL, TRUE);

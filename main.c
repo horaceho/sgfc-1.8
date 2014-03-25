@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 main.c
 ***
-*** Copyright (C) 1996-2006 by Arno Hollosi
+*** Copyright (C) 1996-2014 by Arno Hollosi
 ***
 *** Copyright notice:
 ***
@@ -14,11 +14,6 @@
 *** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ***
 *** The author can be reached at <ahollosi@xmp.net>
-***
-***		Arno Hollosi
-***		Sonnbichlstrasse 50
-***		A-6322 Kirchbichl
-***		Austria (Europe)
 ***
 **************************************************************************/
 
@@ -68,13 +63,13 @@ char *option_outfile = NULL;
 void PrintHelp(int everything)
 {
 	puts(
-		" SGFC V1.16  - Smart Game Format Syntax Checker & Converter\n"
-		"               Copyright (C) 1996-2006 by Arno Hollosi\n"
+		" SGFC V1.17  - Smart Game Format Syntax Checker & Converter\n"
+		"               Copyright (C) 1996-2014 by Arno Hollosi\n"
 		"               Email: <ahollosi@xmp.net>\n"
 		" ----------------------------------------------------------");
 
 	if(everything)
-		puts(
+		printf("%s%s%s\n",        /* split string for ANSI compliance */
 		" sgfc [options] infile [outfile]\n"
 		" Options:\n"
 		"    -h  ... print this help message\n"
@@ -85,7 +80,7 @@ void PrintHelp(int everything)
 		"    -c  ... write file even if a critical error occurs\n"
 		"    -dn ... n = number : disable message number -n-\n"
 		"    -e  ... expand compressed point lists\n"
-		"    -g  ... print game signature (Go GM[1] games only)\n"
+		"    -g  ... print game signature (Go GM[1] games only)\n",
 		"    -i  ... interactive mode (faulty game-info values only)\n"
 		"    -k  ... keep header in front of SGF data\n"
 		"    -lx ... x = 1,2,3,4: a hard linebreak is\n"
@@ -94,7 +89,7 @@ void PrintHelp(int everything)
 		"              3 - two linebreaks in a row\n"
 		"              4 - paragraph style (ISHI format, MFGO)\n"
 		"    -L  ... try to keep linebreaks at the end of nodes\n"
-		"    -m  ... delete markup on current move\n"
+		"    -m  ... delete markup on current move\n",
 		"    -n  ... delete empty nodes\n"
 		"    -o  ... delete obsolete properties\n"
 		"    -p  ... write pass moves as '[tt]' if possible\n"

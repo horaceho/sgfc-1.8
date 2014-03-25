@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 util.c
 ***
-*** Copyright (C) 1996-2004 by Arno Hollosi
+*** Copyright (C) 1996-2014 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -370,16 +370,12 @@ int DecodePosChar(char c)
 
 void FreeSGFInfo(struct SGFInfo *sgf)
 {
-#ifndef DIRTY_FREE
 	struct Node *n, *m;
 	struct Property *p;
 	struct TreeInfo *t, *hlp;
-#endif
 
 	if(!sgf)							/* check just to be sure */
 		return;
-
-#ifndef DIRTY_FREE
 
 	t = sgf->tree;						/* free TreeInfo's */
 	while(t)
@@ -402,8 +398,6 @@ void FreeSGFInfo(struct SGFInfo *sgf)
 
 	if(sgf->buffer)						/* free buffer & file */
 		free(sgf->buffer);
-
-#endif
 
 	if(sgf->file)
 		fclose(sgf->file);

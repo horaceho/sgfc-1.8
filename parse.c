@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 parse.c
 ***
-*** Copyright (C) 1996-2004 by Arno Hollosi
+*** Copyright (C) 1996-2014 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -123,10 +123,15 @@ int Parse_Text(char *value, U_SHORT flags)
 			{
 				case '\\':
 				case ']':	*d++ = *s++;
+							*d++ = *s++;
 							break;
 				case ':':	if(flags & (PVT_COMPOSE|PVT_WEAKCOMPOSE))
-									*d++ = *s++;
-							else	s++;
+							{
+								*d++ = *s++;
+								*d++ = *s++;
+							}
+							else
+								s++;
 							break;
 				case '\n':	s += 2;		/* '\' + '\n' is removed */
 							break;
@@ -192,11 +197,11 @@ int Parse_Text(char *value, U_SHORT flags)
 ***				Kills illegal chars, checks position (board size)
 ***				transforms FF[3] PASS 'tt' into FF[4] PASS ''
 *** Parameters: value ... pointer to value string
-***				pos   ... TRUE: check as position (handling of 'tt')
-*** Returns:	-1/0/1	for corrected error / error / OK
+***				flags ... PARSE_MOVE or PARSE_POS (treats 'tt' as error)
+*** Returns:	-101/-1/0/1	for wrong pass / corrected error / error / OK
 **************************************************************************/
 
-int Parse_Move(char *value, U_SHORT pos)
+int Parse_Move(char *value, U_SHORT flags)
 {
 	int ret = 1, c;
 
@@ -208,7 +213,7 @@ int Parse_Move(char *value, U_SHORT pos)
 
 	if(!strlen(value))				/* empty value? */
     {
-		if(!pos)
+		if(flags & PARSE_MOVE)
 		{
 			if(sgfc->info->FF >= 4)
 				return(ret);
@@ -225,7 +230,7 @@ int Parse_Move(char *value, U_SHORT pos)
 		ret = -1;
 	}
 
-	if(!pos && !strcmp(value, "tt"))
+	if((flags & PARSE_MOVE) && !strcmp(value, "tt"))
 	{
 		if(sgfc->info->bwidth <= 19 && sgfc->info->bheight <= 19)
 		{
@@ -492,7 +497,7 @@ int Check_Text(struct Property *p, struct PropValue *v)
 
 int Check_Pos(struct Property *p, struct PropValue *v)
 {
-	if(!Check_Value(p, v, TRUE, Parse_Move))
+	if(!Check_Value(p, v, PARSE_POS, Parse_Move))
 		return(FALSE);
 
 	if(v->value2)	/* compressed point list */
@@ -500,7 +505,7 @@ int Check_Pos(struct Property *p, struct PropValue *v)
 		if(sgfc->info->FF < 4)
 			PrintError(E_VERSION_CONFLICT, v->buffer, sgfc->info->FF);
 
-		switch((Parse_Move)(v->value2, TRUE))
+		switch((Parse_Move)(v->value2, PARSE_POS))
 		{
 			case -1:	PrintError(E_BAD_VALUE_CORRECTED, v->buffer, p->idstr, v->value2);
 						break;
@@ -531,7 +536,7 @@ int Check_Label(struct Property *p, struct PropValue *v)
 {
 	int error = 0;
 
-	switch(Parse_Move(v->value, TRUE))
+	switch(Parse_Move(v->value, PARSE_POS))
 	{
 		case 0:		PrintError(E_BAD_VALUE_DELETED, v->buffer, p->idstr);
 					return(FALSE);
@@ -568,12 +573,12 @@ int Check_AR_LN(struct Property *p, struct PropValue *v)
 {
 	int error = 0;
 
-	switch(Parse_Move(v->value, TRUE))
+	switch(Parse_Move(v->value, PARSE_POS))
 	{
 		case 0:		PrintError(E_BAD_VALUE_DELETED, v->buffer, p->idstr);
 					return(FALSE);
 		case -1:	error = 1;
-		case 1:		switch(Parse_Move(v->value2, TRUE))
+		case 1:		switch(Parse_Move(v->value2, PARSE_POS))
 					{
 						case 0:	PrintError(E_BAD_VALUE_DELETED, v->buffer, p->idstr);
 								return(FALSE);
