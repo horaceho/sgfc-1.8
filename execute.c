@@ -509,14 +509,16 @@ int Do_View(struct Node *n, struct Property *p, struct BoardStatus *st)
 
 	while(v)
 	{
-		i++;
 		if(!strlen(v->value))	/* '[]' within other values */
 		{
 			PrintError(E_BAD_VW_VALUES, v->buffer, "empty value found in list", "deleted");
 			v = Del_PropValue(p, v);
 		}
 		else
+		{
+			i++;
 			v = v->next;
+		}
 	}
 
 	if(sgfc->info->GM != 1)		/* game not Go */
