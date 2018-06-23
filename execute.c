@@ -478,6 +478,8 @@ int Do_Root(struct Node *n, struct Property *p, struct BoardStatus *st)
 int Do_GInfo(struct Node *n, struct Property *p, struct BoardStatus *st)
 {
 	int x, y;
+	long ki;
+	char *new_km;
 
 	if(st->ginfo && (st->ginfo != n->buffer))
 	{
@@ -497,12 +499,11 @@ int Do_GInfo(struct Node *n, struct Property *p, struct BoardStatus *st)
 			{
 				PrintError(W_INT_KOMI_FOUND, p->buffer, "converted to <KM>");
 
-				x = atoi(p->value->value);
-				p = New_PropValue(n, TKN_KM, "1234567890", NULL, FALSE);
-
-				if(x & 1)	sprintf(p->value->value, "%d.5", x/2);
-				else		sprintf(p->value->value, "%d", x/2);
-
+				ki = strtol(p->value->value, NULL, 10);		/* we can ignore errors here */
+				SaveMalloc(char *, new_km, strlen(p->value->value)+3, "new KM number value");
+				if(ki % 2)	sprintf(new_km, "%ld.5", ki/2);
+				else		sprintf(new_km, "%ld", ki/2);
+				New_PropValue(n, TKN_KM, new_km, NULL, FALSE);
 			}
 			return(FALSE);
 		}

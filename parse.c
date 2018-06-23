@@ -70,7 +70,7 @@ int Parse_Number(char *value, U_SHORT dummy)
 
 int Parse_Text(char *value, U_SHORT flags)
 {
-	char *s, *d, old = 0, nl;
+	char *s, *d, *end, old = 0, nl;
 
 	do			/* loop, because trailing spaces may be protected by '\' */
 	{
@@ -81,16 +81,17 @@ int Parse_Text(char *value, U_SHORT flags)
 		if(!strlen(value))
 			return(0);
 
-		if(*d == '\\' && *(d-1) != '\\')	/* remove trailing '\' */
+		if(*d == '\\' && d > value && *(d-1) != '\\')	/* remove trailing '\' */
 			*d = 0;
 	}while(!*d);
 
 	if(flags & PVT_SIMPLE)	nl = ' ';
 	else					nl = '\n';
 
+	end = value + strlen(value);
 	s = d = value;
 
-	while(*s)							/* transform linebreaks to '\n' */
+	while(s < end)						/* transform linebreaks to '\n' */
 	{									/*			and all WS to space */
 		if(*s == '\r' || *s == '\n')	/* linebreak char? */
 		{
@@ -113,9 +114,10 @@ int Parse_Text(char *value, U_SHORT flags)
 	*d = 0;
 
 
+	end = value + strlen(value);
 	s = d = value;						/* remove unnecessary '\' */
 										/* apply linebreak style */
-	while(*s)
+	while(s < end)
 	{
 		if(*s == '\\')
 		{

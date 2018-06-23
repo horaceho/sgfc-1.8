@@ -690,6 +690,7 @@ int FindStart(int firsttime)
 					PrintError(E_ILLEGAL_OUTSIDE_CHARS, sgfc->current, TRUE, 4);
 
 				sgfc->current += 4;	/* skip '[aa]' */
+				continue;
 			}
 
 		if(*sgfc->current == '(')	/* test for start mark '(;' */
