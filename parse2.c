@@ -594,7 +594,9 @@ void Check_DoubleProp(struct Node *n)
 						while(v->next)	v = v->next;
 						v->next = q->value;
 						q->value->prev = v;
+						p->valend = q->valend;
 						q->value = NULL;	/* values are not deleted */
+						q->valend = NULL;
 					}
 					else	/* single values are merged to one value */
 					{
