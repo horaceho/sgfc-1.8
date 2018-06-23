@@ -25,11 +25,30 @@
 
 /* defines for SkipText */
 
-#define SkipSGFText(e, o)	(sgfc->current = SkipText(sgfc->current, sgfc->b_end, e, o))
-
 #define INSIDE	0
 #define OUTSIDE 1
 #define P_ERROR	2
+
+
+/**************************************************************************
+*** Function:	SkipSGFText
+***				Wrapper for SkipText, using sgfc->current as buffer
+*** Parameters: brk		... break char
+***				mode	... see SkipText
+*** Returns:	TRUE or FALSE
+**************************************************************************/
+
+int SkipSGFText(char brk, int mode)
+{
+	char *pos = SkipText(sgfc->current, sgfc->b_end, brk, mode);
+	if (!pos)
+	{
+		sgfc->current = sgfc->b_end;	/* Apparently we reached the buffer end */
+		return(FALSE);
+	}
+	sgfc->current = pos;
+	return TRUE;
+}	
 
 
 /**************************************************************************
