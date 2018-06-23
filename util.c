@@ -519,7 +519,7 @@ int strnccmp(char *a, char *b, size_t len)
 ***				Deletes selected char-set out of a given string
 *** Parameters: value ... string
 ***				kill ... type of chars to be removed
-***						 C_ISSPACE, C_ISPUNCT, C_IS8BIT, C_ISALPHA
+***						 C_ISSPACE, C_NOT_ISALPHA or C_NOTinSET/C_inSET
 ***				cset ... additional set of chars to be tested
 ***						 (kill has to be one of C_NOTinSET or C_inSET)
 *** Returns:	number of chars removed from string
@@ -533,9 +533,7 @@ U_LONG Kill_Chars(char *value, U_SHORT kill, char *cset)
 	for(c = d = value; *c; c++)
 	{
 		if(((kill & C_ISSPACE) && isspace(*c)) ||
-		   ((kill & C_ISPUNCT) && ispunct(*c)) ||
-		   ((kill & C_IS8BIT) && *c & 0x80) ||
-		   ((kill & C_ISALPHA) && isalpha(*c)))
+		   ((kill & C_NOT_ISALPHA) && !isalpha(*c)))
 			err = 1;
 		else
 			if(kill & C_NOTinSET)
@@ -566,7 +564,7 @@ U_LONG Kill_Chars(char *value, U_SHORT kill, char *cset)
 ***				Tests if string contains specified char-set
 ***				Spaces are ignored (can't be tested)
 *** Parameters: value ... string
-***				test ... test for chars (C_ISPUNCT, C_IS8BIT, C_ISALPHA)
+***				test ... test for chars (C_ISALPHA or C_inSET/C_NOTinSET)
 ***				cset ... char-set to be searched in value
 ***						 (test has to be one of C_inSET or C_NOTinSET)
 *** Returns:	number of selected chars found in value
@@ -582,9 +580,7 @@ U_LONG Test_Chars(char *value, U_SHORT test, char *cset)
 		if(isspace(*c))		/* WhiteSpace are ignored !! */
 			continue;
 
-		if(((test & C_ISPUNCT) && ispunct(*c)) ||
-		   ((test & C_IS8BIT) && *c & 0x80) ||
-		   ((test & C_ISALPHA) && isalpha(*c)))
+		if((test & C_ISALPHA) && isalpha(*c))
 			faulty++;
 		else
 			if(test & C_NOTinSET)

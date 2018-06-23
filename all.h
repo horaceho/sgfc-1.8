@@ -223,12 +223,11 @@ struct SGFToken
 
 /* Defines for KillChars / TestChars */
 
-#define C_ISSPACE	((U_SHORT)0x01)
-#define C_ISPUNCT	((U_SHORT)0x04)
-#define C_IS8BIT	((U_SHORT)0x08)
-#define C_ISALPHA	((U_SHORT)0x10)
-#define C_inSET		((U_SHORT)0x20)
-#define C_NOTinSET	((U_SHORT)0x40)
+#define C_ISSPACE		0x01u
+#define C_ISALPHA		0x02u
+#define C_NOT_ISALPHA	0x04u
+#define C_inSET			0x08u
+#define C_NOTinSET		0x10u
 
 /* defines for error handling */
 

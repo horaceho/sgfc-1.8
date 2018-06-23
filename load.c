@@ -221,10 +221,9 @@ void CopyValue(char *d, char *s, size_t size, int printerror)
 *** Parameters: p		... pointer to property
 ***				buffer	... pointer to position in source buffer (or NULL)
 ***				value	... pointer to first value
-***				size	... length of first value or
-***							zero if value is \0 terminated
+***				size	... length of first value (excluding any 0 bytes)
 ***				value2	... pointer to second value (or NULL)
-***				size2	... length of second value or zero
+***				size2	... length of second value (excluding any 0 bytes)
 *** Returns:	pointer to PropValue structure
 ***				(exits on fatal error)
 **************************************************************************/
@@ -237,16 +236,17 @@ struct PropValue *Add_PropValue(struct Property *p, char *buffer,
 
 	SaveMalloc(struct PropValue *, newv, sizeof(struct PropValue), "property value structure");
 
-	if(!size)	size  = strlen(value);
-
-	/* +2 because Parse_Float may add 1 char and for trailing '\0' byte */
-	SaveMalloc(char *, newv->value, size+2, "property value buffer");
-	CopyValue(newv->value, value, size, TRUE);		/* copy value */
+	if(value)
+	{
+		/* +2 because Parse_Float may add 1 char and for trailing '\0' byte */
+		SaveMalloc(char *, newv->value, size+2, "property value buffer");
+		CopyValue(newv->value, value, size, TRUE);		/* copy value */
+	}
+	else
+		newv->value = NULL;
 
 	if(value2)
 	{
-		if(!size2)	size2 = strlen(value2);
-
 		SaveMalloc(char *, newv->value2, size2+2, "property value2 buffer");
 		CopyValue(newv->value2, value2, size2, TRUE);
 	}

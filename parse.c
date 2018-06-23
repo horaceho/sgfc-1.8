@@ -208,7 +208,7 @@ int Parse_Move(char *value, U_SHORT flags)
 	if(sgfc->info->GM != 1)			/* game != GO ? */
 		return(1);
 
-	if(Kill_Chars(value, C_ISSPACE|C_ISPUNCT|C_IS8BIT, NULL))
+	if(Kill_Chars(value, C_NOT_ISALPHA, NULL))
 		ret = -1;
 
 	if(!strlen(value))				/* empty value? */
@@ -656,10 +656,10 @@ void Check_PropValues(struct Property *p)
 	struct PropValue *v;
 
 	v = p->value;
-	while(v)					/* value loop */
+	while(v)
 	{
 		if(!strlen(v->value) && !(p->flags & PVT_CHECK_EMPTY))
-		{													/* empty value? */
+		{
 			if(sgf_token[p->id].flags & PVT_DEL_EMPTY)
 			{
 				PrintError(W_EMPTY_VALUE_DELETED, v->buffer, p->idstr, "found");
