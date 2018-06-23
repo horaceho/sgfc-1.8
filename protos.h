@@ -113,7 +113,7 @@ extern int warning_count;
 extern int ignored_count;
 extern char error_enabled[MAX_ERROR_NUM];
 
-void SearchPos(char * , char * , int * , int * );
+void SearchPos(char * , struct SGFInfo * , int * , int * );
 int PrintError(U_LONG , ... );
 
 int  DecodePosChar(char );

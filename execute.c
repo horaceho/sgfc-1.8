@@ -448,7 +448,7 @@ int Do_GInfo(struct Node *n, struct Property *p, struct BoardStatus *st)
 
 	if(st->ginfo && (st->ginfo != n->buffer))
 	{
-		SearchPos(st->ginfo, sgfc->buffer, &x, &y);
+		SearchPos(st->ginfo, sgfc, &x, &y);
 		PrintError(E4_GINFO_ALREADY_SET, p->buffer, p->idstr, y, x);
 		return(FALSE);
 	}

@@ -117,20 +117,21 @@ const char *error_mesg[] =
 *** Function:	SearchPos
 ***				Calculate the position in rows/columns within a buffer
 *** Parameters: c ... current position
-***				s ... pointer to start of buffer
+***				sgf ... for start/end of buffer pointers
 ***				x ... result: #columns
 ***				y ... result: #rows
 *** Returns:	- (result stored in x,y)
 **************************************************************************/
 
-void SearchPos(char *c, char *s, int *x, int *y)
+void SearchPos(char *c, struct SGFInfo *sgf, int *x, int *y)
 {
 	char newline = 0;
+	char *s = sgf->buffer;
 
 	*y = 1;
 	*x = 1;
 
-	while(s != c)
+	while(s != c && s < sgf->b_end)
 	{
 		if(*s == '\r' || *s == '\n')		/* linebreak char? */
 		{
@@ -250,7 +251,7 @@ int PrintError(U_LONG type, ...)
 
 	if(type & E_SEARCHPOS)				/* print position if required */
 	{
-		SearchPos(pos, sgfc->buffer, &x, &y);
+		SearchPos(pos, sgfc, &x, &y);
 		fprintf(E_OUTPUT, "Line:%d Col:%d - ", y, x);
 	}
 
