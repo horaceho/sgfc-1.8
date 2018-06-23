@@ -493,7 +493,7 @@ void f_Delete(struct ListHead *h, struct ListNode *n)
 *** Returns:	TRUE=strings not equal, FALSE= equal
 **************************************************************************/
 
-int strnccmp(char *a, char *b, int len)
+int strnccmp(char *a, char *b, size_t len)
 {
 	if(!len)
 		len = strlen(a) + 1;
@@ -798,6 +798,7 @@ struct Property *New_PropValue(struct Node *n, token id,
 {
 	struct Property *p;
 	struct PropValue *v;
+	size_t size1, size2;
 
 	p = Find_Property(n, id);
 	if(p)
@@ -808,7 +809,9 @@ struct Property *New_PropValue(struct Node *n, token id,
 	else
 		p = Add_Property(n, id, NULL, NULL);
 
-	Add_PropValue(p, NULL, value, -1, value2, -1);
+	size1 = strlen(value);
+	size2 = value2 ? strlen(value2) : 0;
+	Add_PropValue(p, NULL, value, size1, value2, size2);
 
 	return(p);
 }

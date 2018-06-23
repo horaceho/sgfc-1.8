@@ -576,7 +576,8 @@ int Parse_Date(char *value, U_SHORT dummy)
 int Check_GameInfo(struct Property *p, struct PropValue *v)
 {
 	char *val;
-	int res, size;
+	size_t size;
+	int res;
 	int (*parse)(char *, U_SHORT);
 
 	if(!Check_Text(p, v))		/* parse text (converts spaces) */

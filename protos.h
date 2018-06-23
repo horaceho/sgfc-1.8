@@ -37,9 +37,9 @@ extern char *option_outfile;
 
 /**** load.c ****/
 
-void CopyValue(char *, char *, U_LONG , int );
+void CopyValue(char *, char *, size_t , int );
 struct PropValue *Add_PropValue(struct Property *, char *, char *,
-								long, char *, long);
+								size_t, char *, size_t);
 struct Property *Add_Property(struct Node *, token , char *, char *);
 struct Node *NewNode(struct Node * , int);
 
@@ -125,7 +125,7 @@ void f_AddTail(struct ListHead * , struct ListNode * );
 void f_Enqueue(struct ListHead * , struct ListNode * );
 void f_Delete(struct ListHead * , struct ListNode * );
 
-int strnccmp(char * , char * , int);
+int strnccmp(char * , char * , size_t);
 U_LONG Kill_Chars(char * , U_SHORT , char * );
 U_LONG Test_Chars(char * , U_SHORT , char * );
 

@@ -200,7 +200,7 @@ int SkipValues(int print_error)
 *** Returns:	-
 **************************************************************************/
 
-void CopyValue(char *d, char *s, U_LONG size, int printerror)
+void CopyValue(char *d, char *s, size_t size, int printerror)
 {
 	while(size--)
 	{
@@ -222,22 +222,22 @@ void CopyValue(char *d, char *s, U_LONG size, int printerror)
 ***				buffer	... pointer to position in source buffer (or NULL)
 ***				value	... pointer to first value
 ***				size	... length of first value or
-***							negative if value is \0 terminated
+***							zero if value is \0 terminated
 ***				value2	... pointer to second value (or NULL)
-***				size2	... length of second value or negative
+***				size2	... length of second value or zero
 *** Returns:	pointer to PropValue structure
 ***				(exits on fatal error)
 **************************************************************************/
 
 struct PropValue *Add_PropValue(struct Property *p, char *buffer,
-								char *value, long size,
-								char *value2, long size2)
+								char *value, size_t size,
+								char *value2, size_t size2)
 {
 	struct PropValue *newv;
 
 	SaveMalloc(struct PropValue *, newv, sizeof(struct PropValue), "property value structure");
 
-	if(size < 0)	size  = strlen(value);
+	if(!size)	size  = strlen(value);
 
 	/* +2 because Parse_Float may add 1 char and for trailing '\0' byte */
 	SaveMalloc(char *, newv->value, size+2, "property value buffer");
@@ -245,7 +245,7 @@ struct PropValue *Add_PropValue(struct Property *p, char *buffer,
 
 	if(value2)
 	{
-		if(size2 < 0)	size2 = strlen(value2);
+		if(!size2)	size2 = strlen(value2);
 
 		SaveMalloc(char *, newv->value2, size2+2, "property value2 buffer");
 		CopyValue(newv->value2, value2, size2, TRUE);
@@ -286,7 +286,7 @@ int NewValue(struct Property *p, U_SHORT flags)
 		if(!t)
 		{
 			if(flags & PVT_WEAKCOMPOSE)	/* no compose -> parse as normal */
-				Add_PropValue(p, buffer, s, sgfc->current - s - 1, NULL, -1);
+				Add_PropValue(p, buffer, s, sgfc->current - s - 1, NULL, 0);
 			else						/* not weak -> error */
 				PrintError(E_COMPOSE_EXPECTED, s-1, p->idstr);
 		}
@@ -294,7 +294,7 @@ int NewValue(struct Property *p, U_SHORT flags)
 			Add_PropValue(p, buffer, s, t - s, t+1, sgfc->current - t - 2);
 	}
 	else
-		Add_PropValue(p, buffer, s, sgfc->current - s - 1, NULL, -1);
+		Add_PropValue(p, buffer, s, sgfc->current - s - 1, NULL, 0);
 
 	return(TRUE);
 }
