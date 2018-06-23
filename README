@@ -58,7 +58,7 @@ SGFC is intended to be a tool for SGF experts, coders and maintainers of
 large SGF archives. You ought to have quite some knowledge of SGF to use
 SGFC efficiently.
 
-SGFC was written primarily for Go/WeiQi/Baduk (GM[1]) files. It can not handle
+SGFC was written primarily for Go/WeiQi/Baduk (GM[1]) files. It cannot handle
 other games yet, i.e. it does not check any game-specific properties and
 values of other games than Go. It may even save errornous game-specific
 properties of other games! Use SGFC for other games with care.
@@ -241,7 +241,7 @@ this search might go wrong (in seldom cases).
 
 In that case specify
     -b2 ... the first '(;' is searched.
-            Note: missing ';' at the beginning can not be detected
+            Note: missing ';' at the beginning cannot be detected
     -b3 ... the first '(' is searched.
             Note: This is the best choice if the SGF data is not preceeded
             by plain text. If there's text in front of the SGF data then
@@ -267,7 +267,7 @@ Disable message number -n-.
 SGFC is a rather pedantic syntax checker.
 If you want to limit the number of messages you get then specify this
 option. With '-d' it's possible to disable specific messages.
-Fatal error messages can not be disabled.
+Fatal error messages cannot be disabled.
 
 Hint: there are messages which can be printed up to 100 times, but which
 are not really critical. This messages are
@@ -307,7 +307,7 @@ The output looks like:
 
 "Game signature - tree 1: 'onqsrq lporke'" (ear reddening move game)
 or
-"Game signature - tree 2: contains GM[12] - can not calculate signature"
+"Game signature - tree 2: contains GM[12] - cannot calculate signature"
 
 
 Option -i:
@@ -386,7 +386,7 @@ Option -n:
 Delete empty nodes.
 
 Removes nodes which contain no properties.
-There are empty nodes which can not be deleted. These nodes are:
+There are empty nodes which cannot be deleted. These nodes are:
 
 - root node if it has more than one child
 - a node which has siblings and has more than one child
@@ -414,7 +414,7 @@ Option -p:
 ----------
 Write pass moves as '[tt]' if possible.
 
-FF[4] allows writing pass moves as '[]'. Older appplications can not deal with
+FF[4] allows writing pass moves as '[]'. Older appplications cannot deal with
 this value. If you are concerned about compatibility to old applications
 you should avoid the new format and specify this option.
 
@@ -461,7 +461,7 @@ Soft linebreaks are linebreaks which are not displayed.
 By default SGFC inserts soft linebreaks wherever necessary to limit the
 line length to 76 chars.
 
-However old applications can not deal with soft linebreaks.
+However old applications cannot deal with soft linebreaks.
 If you are concerned about compatibility to old applications you should
 avoid soft linebreaks and specify this option.
 
@@ -581,7 +581,7 @@ Invoking SGFC without any parameters and input file test.sgf should yield:
 50 errors and 18 warnings - 11 messages are critical.
 Invoking SGFC with 'sgfc -oun test.sgf' should yield 12 warnings more.
 
-Following errors can not be tested from within the test file:
+Following errors cannot be tested from within the test file:
 
 Fatal error 1: error in commandline: e.g. 'sgfc in.sgf out.sgf foo'
 Fatal error 2: error in commandline: e.g. 'sgfc -x in.sgf'
@@ -926,7 +926,7 @@ Classes:
 18:E    "illegal root property <%s> found (%s)" (action taken)
         Example: >>(;FF[four]GM[Go]SZ[-12])<<
 
-19:W-C  "game stored in tree %d is not Go. Can not check move & position type"
+19:W-C  "game stored in tree %d is not Go. Cannot check move & position type"
         " -> errors will not get corrected!"
         Example: >>(;GM[12])<<
 
@@ -939,7 +939,7 @@ Classes:
         Example: >>(;B[cc]((;W[dd])<<
 
 22:W    "$00 byte deleted - binary file?"
-        Note: SGFC can not handle $00 bytes in property values
+        Note: SGFC cannot handle $00 bytes in property values
 
 23:E    "property <%s> expects compose type value (value deleted): "
         Example: >>(;LB[aa][bb][cc])<<
@@ -1040,7 +1040,7 @@ Classes:
 55:W	"empty node deleted"
         Example: >>(;;;C[empty])<< and invoke sgfc with option '-n'
 
-56:W	"possible incorrect variation level can not be corrected"
+56:W	"possible incorrect variation level cannot be corrected"
         Example: >>(;B[dd];W[aa](;B[bb])(;AE[aa];W[ba])(;AE[dd][aa];B[ef]))<<
 
 57:W	"variation level corrected"
@@ -1064,7 +1064,7 @@ Classes:
 63:W    "two successive moves have the same color"
         Example: >>(;GM[1];B[dd];W[cc];W[dd])<< and check with '-r'
 
-64:E    "can not reorder variations: too many variations"
+64:E    "cannot reorder variations: too many variations"
         Example: create a file with more than 100 variations of one move.
 
 65:E    "FF4 style pass value '[]' in older format found (corrected)"

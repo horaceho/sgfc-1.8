@@ -205,17 +205,24 @@ static int Parse_Text(char *value, U_SHORT flags)
 
 int Parse_Move(char *value, U_SHORT flags)
 {
-	int ret = 1, c;
+	int ret = 1, emptyOrSpace = FALSE, c;
 
 	if(sgfc->info->GM != 1)			/* game != GO ? */
 		return(1);
+
+	/* At first only delete space so that we can distinguish
+	 * FF4 pass move from erroneous property values */
+	if(Kill_Chars(value, C_ISSPACE, NULL))
+		ret = -1;
+	if(!strlen(value))
+		emptyOrSpace = TRUE;
 
 	if(Kill_Chars(value, C_NOT_ISALPHA, NULL))
 		ret = -1;
 
 	if(!strlen(value))				/* empty value? */
 	{
-		if(flags & PARSE_MOVE)
+		if(flags & PARSE_MOVE && emptyOrSpace)
 		{
 			if(sgfc->info->FF >= 4)
 				return(ret);

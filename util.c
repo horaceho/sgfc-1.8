@@ -49,7 +49,7 @@ static const char *error_mesg[] =
 	"lowercase char not allowed in property identifier\n",
 	"empty <%s> value %s (deleted)\n",
 	"illegal root property <%s> found (assuming %s)\n",
-	"game stored in tree %d is not Go. Can not check move & position type"
+	"game stored in tree %d is not Go. Cannot check move & position type"
 									" -> errors will not get corrected!\n",
 	"property <%s> without any values found (ignored)\n",
 /* 20 */
@@ -95,7 +95,7 @@ static const char *error_mesg[] =
 	"values without property id found (deleted)\n",
 	"empty node deleted\n",
 /* 55 */
-	"possible incorrect variation level can not be corrected\n",
+	"possible incorrect variation level cannot be corrected\n",
 	"variation level corrected\n",
 	"forbidden move found (played on a point occupied by another stone)\n",
 	"obsolete <KI> property found: %s\n",
@@ -104,7 +104,7 @@ static const char *error_mesg[] =
 	"value of HA property differs from number of setup stones\n",
 	"setup stones in main line found (outside root node)\n",
 	"two successive moves have the same color\n",
-	"can not reorder variations: too many variations\n",
+	"cannot reorder variations: too many variations\n",
 	"FF4 style pass value '[]' in older format found (corrected)\n",
 /*65 */
 	"node outside variation found. Missing '(' assumed.\n",
