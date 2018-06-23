@@ -102,9 +102,12 @@ int Parse_Time(char *val, U_SHORT dummy)
 	if(Kill_Chars(val, C_ISSPACE, NULL))
 		ret = -1;
 
+	if(!(*val))		/* only empty value left -> error */
+		return(0);
+
 	/* ":/;+" indicate that there's byo-yomi time given too */
 	/* &val[1] because of possible leading '+' */
-	if(Test_Chars(&val[1], C_inSET, ":/;+"))
+	if(strlen(val) > 1 && Test_Chars(&val[1], C_inSET, ":/;+"))
 		return(0);
 
 	if(Test_Chars(val, C_ISALPHA, NULL))

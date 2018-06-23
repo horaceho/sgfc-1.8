@@ -695,8 +695,11 @@ int FindStart(int firsttime)
 		if(*sgfc->current == '(')	/* test for start mark '(;' */
 		{
 			tmp = sgfc->current + 1;
-			while((tmp != sgfc->b_end) && isspace(*tmp))
+			while((tmp < sgfc->b_end) && isspace(*tmp))
 				tmp++;
+
+			if(tmp == sgfc->b_end)
+				break;
 
 			if(*tmp == ';')
 				return(FALSE);
