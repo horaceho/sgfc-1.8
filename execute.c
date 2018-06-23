@@ -333,15 +333,33 @@ int Do_Markup(struct Node *n, struct Property *p, struct BoardStatus *st)
 	int x, y;
 	struct PropValue *v;
 	U_SHORT flag;
+	int empty, not_empty;
 
 	if(sgfc->info->GM != 1)		/* game != Go? */
 		return(TRUE);
 
 	v = p->value;
 	flag = sgf_token[p->id].data;
+	empty = FALSE;
+	not_empty = FALSE;
 
 	while(v)
 	{
+		if(!strlen(v->value))
+		{
+			if(empty)	/* if we already have an empty value */
+			{
+				PrintError(E_EMPTY_VALUE_DELETED, v->buffer, "Markup", p->idstr);
+				v = Del_PropValue(p, v);
+				continue;
+			}
+			empty = TRUE;
+			v = v->next;
+			continue;
+		}
+		else
+			not_empty = TRUE;
+
 		x = DecodePosChar(v->value[0]) - 1;
 		y = DecodePosChar(v->value[1]) - 1;
 	
@@ -355,6 +373,21 @@ int Do_Markup(struct Node *n, struct Property *p, struct BoardStatus *st)
 		st->markup[MXY(x,y)] |= flag;
 		st->mrkp_chngd = TRUE;
 		v = v->next;
+	}
+
+	if(empty && not_empty)	/* if we have both empty and non-empty values: delete empty values */
+	{
+		v = p->value;
+		while(v) {
+			if(!strlen(v->value))
+			{
+				PrintError(E_EMPTY_VALUE_DELETED, v->buffer, "Markup", p->idstr);
+				v = Del_PropValue(p, v);
+				continue;
+			}
+			else
+				v = v->next;
+		}
 	}
 
 	return(TRUE);
