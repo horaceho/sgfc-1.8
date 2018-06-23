@@ -124,7 +124,7 @@ int Parse_Time(char *val, U_SHORT dummy)
 		if(Parse_Float(val, 0))
 		{
 			time = atof(val) * hour;
-			sprintf(val, "%f", time);
+			sprintf(val, "%.1f", time);		/* limit time resolution to 0.1 seconds */
 			Parse_Float(val, 0);			/* remove trailing '0' */
 		}
 		else
@@ -592,8 +592,8 @@ int Check_GameInfo(struct Property *p, struct PropValue *v)
 		default:		return(TRUE);
 	}
 
-	size = (strlen(v->value) > 25) ? (strlen(v->value) + 2) : 27;
-	/* correct funcions may use up to 25 bytes */
+	size = (strlen(v->value) > (25-8)) ? (strlen(v->value) + 8) : (25+1);
+	/* correct functions may use up to 25 bytes; +8 because time in hours multiplies by 3600 and adds ".0" */
 
 	SaveMalloc(char *, val, size, "result value buffer");
 	strcpy(val, v->value);
