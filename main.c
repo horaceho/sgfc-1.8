@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 main.c
 ***
-*** Copyright (C) 1996-2014 by Arno Hollosi
+*** Copyright (C) 1996-2018 by Arno Hollosi
 ***
 *** Copyright notice:
 ***
@@ -25,7 +25,7 @@
 #include "all.h"
 #include "protos.h"
 
-struct SGFInfo sgf;
+static struct SGFInfo sgf;
 
 struct SGFInfo *sgfc = NULL;
 						/* pointer to current (actual) SGFInfo structure
@@ -60,11 +60,11 @@ char *option_outfile = NULL;
 ***				Prints banner + options
 **************************************************************************/
 
-void PrintHelp(int everything)
+static void PrintHelp(int everything)
 {
 	puts(
-		" SGFC V1.17  - Smart Game Format Syntax Checker & Converter\n"
-		"               Copyright (C) 1996-2014 by Arno Hollosi\n"
+		" SGFC V1.18  - Smart Game Format Syntax Checker & Converter\n"
+		"               Copyright (C) 1996-2018 by Arno Hollosi\n"
 		"               Email: <ahollosi@xmp.net>\n"
 		" ----------------------------------------------------------");
 
@@ -117,7 +117,7 @@ void PrintHelp(int everything)
 *** Returns:	TRUE for ok / FALSE for exit program (help printed)
 **************************************************************************/
 
-int ParseArgs(int argc, char *argv[])
+static int ParseArgs(int argc, char *argv[])
 {
 	int i, n, m;
 	char *c, *hlp;

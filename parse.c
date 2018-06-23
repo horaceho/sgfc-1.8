@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 parse.c
 ***
-*** Copyright (C) 1996-2014 by Arno Hollosi
+*** Copyright (C) 1996-2018 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -68,7 +68,7 @@ int Parse_Number(char *value, U_SHORT dummy)
 *** Returns:	length of converted string (0 for empty string)
 **************************************************************************/
 
-int Parse_Text(char *value, U_SHORT flags)
+static int Parse_Text(char *value, U_SHORT flags)
 {
 	char *s, *d, *end, old = 0, nl;
 
@@ -653,7 +653,7 @@ int Check_Figure(struct Property *p, struct PropValue *v)
 *** Returns:	-
 **************************************************************************/
 
-void Check_PropValues(struct Property *p)
+static void Check_PropValues(struct Property *p)
 {
 	struct PropValue *v;
 
@@ -696,7 +696,7 @@ void Check_PropValues(struct Property *p)
 *** Returns:	-
 **************************************************************************/
 
-void CheckID_Lowercase(char *p)
+static void CheckID_Lowercase(char *p)
 {
 	while(isalpha(*p))
 	{

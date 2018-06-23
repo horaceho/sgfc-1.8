@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 gameinfo.c
 ***
-*** Copyright (C) 1996-2014 by Arno Hollosi
+*** Copyright (C) 1996-2018 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -25,7 +25,7 @@
 *** Returns:	0 .. nothing found / fraction value (*4)
 **************************************************************************/
 
-int Get_Fraction(char *val)
+static int Get_Fraction(char *val)
 {
 	int frac = 0;
 	char *t;
@@ -56,7 +56,7 @@ int Get_Fraction(char *val)
 *** Returns:	-1/0/1/2: corrected error / error / ok / corrected
 **************************************************************************/
 
-int Parse_Komi(char *val, U_SHORT dummy)
+static int Parse_Komi(char *val, U_SHORT dummy)
 {
 	int frac, ret;
 	double points = 0.0;
@@ -93,7 +93,7 @@ int Parse_Komi(char *val, U_SHORT dummy)
 *** Returns:	-1/0/1/2: corrected error / error / ok / corrected
 **************************************************************************/
 
-int Parse_Time(char *val, U_SHORT dummy)
+static int Parse_Time(char *val, U_SHORT dummy)
 {
 	int ret = 1, hour = 0, min = 0;
 	double time;
@@ -153,7 +153,7 @@ int Parse_Time(char *val, U_SHORT dummy)
 *** Returns:	-1/0/1/2: corrected error / error / ok / corrected
 **************************************************************************/
 
-int Parse_Result(char *val, U_SHORT dummy)
+static int Parse_Result(char *val, U_SHORT dummy)
 {
 	char *s, *d;
 	int err = 1, charpoints, type = 0;
@@ -238,29 +238,29 @@ int Parse_Result(char *val, U_SHORT dummy)
 								strcpy(&val[1], "+R");
 							}
 							else
-							if((type & 24) || charpoints)	/* point win */
-							{
-								err = Parse_Float(&val[1], TYPE_GINFO);
-
-								if(!err && !charpoints)	/* no points found */
+								if((type & 24) || charpoints)	/* point win */
 								{
-									if(type & 16)
-										return(0);		/* info would be lost */
+									err = Parse_Float(&val[1], TYPE_GINFO);
+
+									if(!err && !charpoints)	/* no points found */
+									{
+										if(type & 16)
+											return(0);		/* info would be lost */
+										else
+											strcpy(&val[1], "+");
+									}
 									else
-										strcpy(&val[1], "+");
-								}
-								else
-								{
-									if(err)
-										points = atof(&val[1]);
+									{
+										if(err)
+											points = atof(&val[1]);
 
-									points += (charpoints / 4.0);
-									sprintf(&val[1], "+%f", points);
-									Parse_Float(&val[2], TYPE_GINFO);
+										points += (charpoints / 4.0);
+										sprintf(&val[1], "+%f", points);
+										Parse_Float(&val[2], TYPE_GINFO);
+									}
 								}
-							}
-							else	/* just win or lose */
-								strcpy(&val[1], "+");
+								else	/* just win or lose */
+									strcpy(&val[1], "+");
 
 							if((type & 4))
 							{
@@ -338,7 +338,7 @@ int Parse_Result(char *val, U_SHORT dummy)
 *** Returns:	-1/0: corrected error / error
 **************************************************************************/
 
-int Correct_Date(char *value)
+static int Correct_Date(char *value)
 {
 	int year = -1, month = -1, day = -1, day2 = -1;
 	int i, charmonth = FALSE;
@@ -424,7 +424,7 @@ int Correct_Date(char *value)
 *** Returns:	-1/0/1: corrected error / error / ok
 **************************************************************************/
 
-int Parse_Date(char *value, U_SHORT dummy)
+static int Parse_Date(char *value, U_SHORT dummy)
 {
 	int ret = 1, allowed, type, hasgoty, turn, oldtype;
 	char *c, *d;
@@ -569,72 +569,6 @@ int Parse_Date(char *value, U_SHORT dummy)
 
 
 /**************************************************************************
-*** Function:	Check_GameInfo
-***				Checks RE,DT,TM, KM value
-*** Parameters: p ... pointer to property containing the value
-***				v ... pointer to property value
-*** Returns:	TRUE for success / FALSE if value has to be deleted
-**************************************************************************/
-
-int Check_GameInfo(struct Property *p, struct PropValue *v)
-{
-	char *val;
-	size_t size;
-	int res;
-	int (*parse)(char *, U_SHORT);
-
-	if(!Check_Text(p, v))		/* parse text (converts spaces) */
-		return(FALSE);
-
-	switch(p->id)
-	{
-		case TKN_RE:	parse = Parse_Result;		break;
-		case TKN_DT:	parse = Parse_Date;			break;
-		case TKN_TM:	parse = Parse_Time;			break;
-		case TKN_KM:	parse = Parse_Komi;			break;
-		default:		return(TRUE);
-	}
-
-	size = (strlen(v->value) > (25-8)) ? (strlen(v->value) + 8) : (25+1);
-	/* correct functions may use up to 25 bytes; +8 because time in hours multiplies by 3600 and adds ".0" */
-
-	SaveMalloc(char *, val, size, "result value buffer");
-	strcpy(val, v->value);
-
-	res = (*parse)(val, 0);
-
-	if(option_interactive)
-	{
-
-		if(res < 1)
-			if(!PromptGameInfo(p, v, parse))
-			{
-				free(val);
-				return(FALSE);
-			}
-	}
-	else
-	{
-		switch(res)
-		{
-			case 0:		PrintError(E4_FAULTY_GC, v->buffer, p->idstr, "(NOT CORRECTED!)");
-						break;
-			case -1:	PrintError(E4_BAD_VALUE_CORRECTED, v->buffer, p->idstr, val);
-						free(v->value);
-						v->value = val;
-						return(TRUE);
-		}
-	}
-
-	if(res == 2)
-		strcpy(v->value, val);
-
-	free(val);
-	return(TRUE);
-}
-
-
-/**************************************************************************
 *** Function:	PromptGameInfo
 ***				If interactive mode: prompts for game-info value
 ***				else just print error message
@@ -643,7 +577,7 @@ int Check_GameInfo(struct Property *p, struct PropValue *v)
 *** Returns:	TRUE / FALSE if property should be deleted
 **************************************************************************/
 
-int PromptGameInfo(struct Property *p, struct PropValue *v,
+static int PromptGameInfo(struct Property *p, struct PropValue *v,
 				   int (*Parse_Value)(char *, U_SHORT))
 {
 	char *newgi, *oldgi, inp[2001];
@@ -719,5 +653,71 @@ int PromptGameInfo(struct Property *p, struct PropValue *v,
 
 	free(newgi);
 	free(oldgi);
+	return(TRUE);
+}
+
+
+/**************************************************************************
+*** Function:	Check_GameInfo
+***				Checks RE,DT,TM, KM value
+*** Parameters: p ... pointer to property containing the value
+***				v ... pointer to property value
+*** Returns:	TRUE for success / FALSE if value has to be deleted
+**************************************************************************/
+
+int Check_GameInfo(struct Property *p, struct PropValue *v)
+{
+	char *val;
+	size_t size;
+	int res;
+	int (*parse)(char *, U_SHORT);
+
+	if(!Check_Text(p, v))		/* parse text (converts spaces) */
+		return(FALSE);
+
+	switch(p->id)
+	{
+		case TKN_RE:	parse = Parse_Result;		break;
+		case TKN_DT:	parse = Parse_Date;			break;
+		case TKN_TM:	parse = Parse_Time;			break;
+		case TKN_KM:	parse = Parse_Komi;			break;
+		default:		return(TRUE);
+	}
+
+	size = (strlen(v->value) > (25-8)) ? (strlen(v->value) + 8) : (25+1);
+	/* correct functions may use up to 25 bytes; +8 because time in hours multiplies by 3600 and adds ".0" */
+
+	SaveMalloc(char *, val, size, "result value buffer");
+	strcpy(val, v->value);
+
+	res = (*parse)(val, 0);
+
+	if(option_interactive)
+	{
+
+		if(res < 1)
+			if(!PromptGameInfo(p, v, parse))
+			{
+				free(val);
+				return(FALSE);
+			}
+	}
+	else
+	{
+		switch(res)
+		{
+			case 0:		PrintError(E4_FAULTY_GC, v->buffer, p->idstr, "(NOT CORRECTED!)");
+				break;
+			case -1:	PrintError(E4_BAD_VALUE_CORRECTED, v->buffer, p->idstr, val);
+				free(v->value);
+				v->value = val;
+				return(TRUE);
+		}
+	}
+
+	if(res == 2)
+		strcpy(v->value, val);
+
+	free(val);
 	return(TRUE);
 }

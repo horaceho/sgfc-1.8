@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 util.c
 ***
-*** Copyright (C) 1996-2014 by Arno Hollosi
+*** Copyright (C) 1996-2018 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -26,7 +26,7 @@ int ignored_count = 0;
 
 char error_enabled[MAX_ERROR_NUM];
 
-const char *error_mesg[] =
+static const char *error_mesg[] =
 {
 	"unknown command '%s' (-h for help)\n",
 	"unknown command line option '%c' (-h for help)\n",

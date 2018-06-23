@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 properties.c
 ***
-*** Copyright (C) 1996-2014 by Arno Hollosi
+*** Copyright (C) 1996-2018 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -14,32 +14,32 @@
 #include "protos.h"
 
 
-int Check_Move(struct Property *p, struct PropValue *v)
+static int Check_Move(struct Property *p, struct PropValue *v)
 {
 	return(Check_Value(p, v, PARSE_MOVE, Parse_Move));
 }
 
-int Check_Number(struct Property *p, struct PropValue *v)
+static int Check_Number(struct Property *p, struct PropValue *v)
 {
 	return(Check_Value(p, v, p->flags, Parse_Number));
 }
 
-int Check_Float(struct Property *p, struct PropValue *v)
+static int Check_Float(struct Property *p, struct PropValue *v)
 {
 	return(Check_Value(p, v, p->flags, Parse_Float));
 }
 
-int Check_Color(struct Property *p, struct PropValue *v)
+static int Check_Color(struct Property *p, struct PropValue *v)
 {
 	return(Check_Value(p, v, p->flags, Parse_Color));
 }
 
-int Check_Triple(struct Property *p, struct PropValue *v)
+static int Check_Triple(struct Property *p, struct PropValue *v)
 {
 	return(Check_Value(p, v, p->flags, Parse_Triple));
 }
 
-int Check_Empty(struct Property *p, struct PropValue *v)
+static int Check_Empty(struct Property *p, struct PropValue *v)
 {
 	v->value[0] = 0;
 	PrintError(E_BAD_VALUE_CORRECTED, v->buffer, p->idstr, v->value);

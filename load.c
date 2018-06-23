@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 load.c
 ***
-*** Copyright (C) 1996-2014 by Arno Hollosi
+*** Copyright (C) 1996-2018 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 *** Notes:	Almost all routines in this file return either
@@ -38,7 +38,7 @@
 *** Returns:	TRUE or FALSE
 **************************************************************************/
 
-int SkipSGFText(char brk, int mode)
+static int SkipSGFText(char brk, int mode)
 {
 	char *pos = SkipText(sgfc->current, sgfc->b_end, brk, mode);
 	if (!pos)
@@ -113,7 +113,7 @@ char *SkipText(char *s, char *e, char end, int mode)
 *** Returns:	TRUE or FALSE
 **************************************************************************/
 
-int GetNextChar(int print_error, U_LONG errc)
+static int GetNextChar(int print_error, U_LONG errc)
 {
 	int lc = 0;
 
@@ -167,7 +167,7 @@ int GetNextChar(int print_error, U_LONG errc)
 *** Returns:	TRUE or FALSE
 **************************************************************************/
 
-int SkipValues(int print_error)
+static int SkipValues(int print_error)
 {
 	if(!SkipSGFText('[', OUTSIDE|P_ERROR))	/* search start of first value */
 		return(FALSE);
@@ -268,7 +268,7 @@ struct PropValue *Add_PropValue(struct Property *p, char *buffer,
 *** Returns:	TRUE or FALSE
 **************************************************************************/
 
-int NewValue(struct Property *p, U_SHORT flags)
+static int NewValue(struct Property *p, U_SHORT flags)
 {
 	char *s, *t, *buffer;
 
@@ -352,7 +352,7 @@ struct Property *Add_Property(struct Node *n, token id, char *id_buf, char *idst
 *** Returns:	TRUE or FALSE
 **************************************************************************/
 
-int NewProperty(struct Node *n, token id, char *id_buf, char *idstr)
+static int NewProperty(struct Node *n, token id, char *id_buf, char *idstr)
 {
 	struct Property *newp;
 	int ret = TRUE;
@@ -412,7 +412,7 @@ int NewProperty(struct Node *n, token id, char *id_buf, char *idstr)
 *** Returns:	TRUE or FALSE
 **************************************************************************/
 
-int MakeProperties(struct Node *n)
+static int MakeProperties(struct Node *n)
 {
 	char *id, propid[100];
 	int i;
@@ -537,12 +537,12 @@ struct Node *NewNode(struct Node *parent, int newchild)
 
 	SaveMalloc(struct Node *, newn, sizeof(struct Node), "node structure");
 
-	newn->parent		= parent;		/* init node structure */
+	newn->parent	= parent;		/* init node structure */
 	newn->child		= NULL;
 	newn->sibling	= NULL;
 	newn->prop		= NULL;
 	newn->last		= NULL;
-	newn->buffer		= sgfc->current;
+	newn->buffer	= sgfc->current;
 
 	AddTail(sgfc, newn);
 
@@ -601,7 +601,7 @@ struct Node *NewNode(struct Node *parent, int newchild)
 *** Returns:	TRUE or FALSE on success/error
 **************************************************************************/
 
-int BuildSGFTree(struct Node *r)
+static int BuildSGFTree(struct Node *r)
 {
 	int end_tree = 0, empty = 1;
 
@@ -666,7 +666,7 @@ int BuildSGFTree(struct Node *r)
 *** Returns:	FALSE ... ok/ TRUE ... missing ';'  (exits on fatal error)
 **************************************************************************/
 
-int FindStart(int firsttime)
+static int FindStart(int firsttime)
 {
 	int warn = 0, o, c;
 	char *tmp;

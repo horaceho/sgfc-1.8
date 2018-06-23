@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 parse.c
 ***
-*** Copyright (C) 1996-2014 by Arno Hollosi
+*** Copyright (C) 1996-2018 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -170,7 +170,7 @@ void CompressPointList(struct Property *p)
 *** Returns:	-
 **************************************************************************/
 
-void Correct_Variation(struct Node *n)
+static void Correct_Variation(struct Node *n)
 {
 	struct Node *p, *i, *j, *k;
 	struct Property *pmv, *w, *b, *ae;
@@ -301,7 +301,7 @@ void Correct_Variation(struct Node *n)
 *** Returns:	-
 **************************************************************************/
 
-void Correct_Variations(struct Node *r, struct TreeInfo *ti)
+static void Correct_Variations(struct Node *r, struct TreeInfo *ti)
 {
 	struct Node *n;
 
@@ -339,8 +339,6 @@ void Correct_Variations(struct Node *r, struct TreeInfo *ti)
 
 		r = r->child;
 	}
-
-	return;
 }
 
 
@@ -351,7 +349,7 @@ void Correct_Variations(struct Node *r, struct TreeInfo *ti)
 *** Returns:	-
 **************************************************************************/
 
-void Reorder_Variations(struct Node *r)
+static void Reorder_Variations(struct Node *r)
 {
 	struct Node *n, *s[MAX_REORDER_VARIATIONS];
 	int i;
@@ -391,7 +389,6 @@ void Reorder_Variations(struct Node *r)
 		}
 		r = r->child;
 	}
-	return;
 }
 
 
@@ -402,7 +399,7 @@ void Reorder_Variations(struct Node *r)
 *** Returns:	-
 **************************************************************************/
 
-void Del_EmptyNodes(struct Node *n)
+static void Del_EmptyNodes(struct Node *n)
 {
 	if(n->child)
 		Del_EmptyNodes(n->child);
@@ -424,7 +421,7 @@ void Del_EmptyNodes(struct Node *n)
 *** Returns:	-
 **************************************************************************/
 
-void Calc_GameSig(struct Node *r, struct TreeInfo *ti)
+static void Calc_GameSig(struct Node *r, struct TreeInfo *ti)
 {
 	char id[14];
 	int i;
@@ -523,7 +520,7 @@ void Split_Node(struct Node *n, U_SHORT flags, token id, int move)
 *** Returns:	TRUE if node is split / FALSE otherwise
 **************************************************************************/
 
-int Split_MoveSetup(struct Node *n)
+static int Split_MoveSetup(struct Node *n)
 {
 	struct Property *p, *s = NULL;
 	U_SHORT f, sc = 0;
@@ -570,7 +567,7 @@ int Split_MoveSetup(struct Node *n)
 *** Returns:	-
 **************************************************************************/
 
-void Check_DoubleProp(struct Node *n)
+static void Check_DoubleProp(struct Node *n)
 {
 	struct Property *p, *q;
 	struct PropValue *v, *w;
@@ -639,7 +636,7 @@ void Check_DoubleProp(struct Node *n)
 *** Returns:	TRUE ... success / FALSE ... errornous property deleted
 **************************************************************************/
 
-int GetNumber(struct Node *n, struct Property *p, int value, int *d,
+static int GetNumber(struct Node *n, struct Property *p, int value, int *d,
 			  int def, char *err_action)
 {
 	char *v;
@@ -684,7 +681,7 @@ int GetNumber(struct Node *n, struct Property *p, int value, int *d,
 *** Returns:	-
 **************************************************************************/
 
-void Init_TreeInfo(struct Node *r)
+static void Init_TreeInfo(struct Node *r)
 {
 	static int FF_diff = 0, GM_diff = 0;
 	struct TreeInfo *ti;
@@ -810,7 +807,7 @@ void Init_TreeInfo(struct Node *r)
 *** Returns:	-
 **************************************************************************/
 
-void Check_SGFTree(struct Node *r, struct BoardStatus *old)
+static void Check_SGFTree(struct Node *r, struct BoardStatus *old)
 {
 	struct Node *n;
 	struct BoardStatus *st;

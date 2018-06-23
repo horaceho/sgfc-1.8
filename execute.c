@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 execute.c
 ***
-*** Copyright (C) 1996-2014 by Arno Hollosi
+*** Copyright (C) 1996-2018 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -15,8 +15,8 @@
 #include "protos.h"
 
 
-U_LONG path_board[MAX_BOARDSIZE*MAX_BOARDSIZE];
-U_LONG path_num = 0;
+static U_LONG path_board[MAX_BOARDSIZE*MAX_BOARDSIZE];
+static U_LONG path_num = 0;
 
 
 /**************************************************************************
@@ -27,7 +27,7 @@ U_LONG path_num = 0;
 *** Returns:	-
 **************************************************************************/
 
-void Make_Capture(int x, int y, struct BoardStatus *st)
+static void Make_Capture(int x, int y, struct BoardStatus *st)
 {
 	if(path_board[MXY(x,y)] != path_num)
 		return;
@@ -53,7 +53,7 @@ void Make_Capture(int x, int y, struct BoardStatus *st)
 *** Returns:	TRUE if capture / FALSE if liberty found
 **************************************************************************/
 
-int Recursive_Capture(int color, int x, int y, struct BoardStatus *st)
+static int Recursive_Capture(int color, int x, int y, struct BoardStatus *st)
 {
 	if(!st->board[MXY(x,y)])
 		return(FALSE);		/* liberty found */
@@ -88,7 +88,7 @@ int Recursive_Capture(int color, int x, int y, struct BoardStatus *st)
 *** Returns:	-
 **************************************************************************/
 
-void Capture_Stones(struct BoardStatus *st, int color, int x, int y)
+static void Capture_Stones(struct BoardStatus *st, int color, int x, int y)
 {
 	if(x < 0 || y < 0 || x >= sgfc->info->bwidth || y >= sgfc->info->bheight)
 		return;		/* not on board */

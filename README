@@ -1,7 +1,7 @@
-SGF Syntax Checker & Converter: SGFC V1.17
+SGF Syntax Checker & Converter: SGFC V1.18
 ==========================================
 
-SGFC Copyright (C) 1996-2014 by Arno Hollosi <ahollosi@xmp.net>
+SGFC Copyright (C) 1996-2018 by Arno Hollosi <ahollosi@xmp.net>
 
 SGFC is open source software and is published under the terms of the
 BSD License. Read 'COPYING' for more information.
@@ -398,7 +398,7 @@ Delete obsolete/unknown properties.
 
 SGFC knows all FF[4] properties (general ones and Go specific ones) and
 all FF[1]-FF[3] properties defined by the specifications of Anders Kierulf
-and Martin Müller (it does not know all SGB properties though).
+and Martin MÃ¼ller (it does not know all SGB properties though).
 I.e. any unknown property encountered is likely to be a private property
 of the application used to write this file.
 
@@ -616,6 +616,11 @@ to read in this file :-)
 
 Appendix B: History
 ===================
+
+V1.18 (2018-06-23)
+------------------
+- fixed multiple segfaults and memory problems (reported by Arne Padmos)
+
 
 V1.17 (2009-11-30/2014-03-25)
 ------------------
@@ -937,7 +942,7 @@ Classes:
         Note: SGFC can not handle $00 bytes in property values
 
 23:E    "property <%s> expects compose type value (value deleted): "
-        Example: >>(;LB[aa][bb][çc])<<
+        Example: >>(;LB[aa][bb][cc])<<
 
 24:W    "move in root node found (splitted node into two)"
         Example: >>(;GM[1]B[dd])<<

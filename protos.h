@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 protos.h
 ***
-*** Copyright (C) 1996-2014 by Arno Hollosi
+*** Copyright (C) 1996-2018 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -60,7 +60,6 @@ extern struct SGFToken sgf_token[];
 /**** parse.c ****/
 
 int Parse_Number(char * , U_SHORT );
-int Parse_Text(char * , U_SHORT );
 int Parse_Move(char * , U_SHORT );
 int Parse_Float(char * , U_SHORT );
 int Parse_Color(char * , U_SHORT );
@@ -102,7 +101,6 @@ int Do_View(struct Node *, struct Property *, struct BoardStatus *);
 /**** gameinfo.c ****/
 
 int Check_GameInfo(struct Property *, struct PropValue *);
-int PromptGameInfo(struct Property *, struct PropValue *, int (*)(char *, U_SHORT));
 
 
 /**** util.c ****/
@@ -149,4 +147,4 @@ void Strict_Checking(struct SGFInfo *sgf);
 #define Enqueue(h,n) f_Enqueue((struct ListHead *)(h), (struct ListNode *)(n))
 #define Delete(h,n) f_Delete((struct ListHead *)(h), (struct ListNode *)(n))
 
-#define SaveMalloc(type, v, sz, err)	{ v = (type)malloc((size_t)(sz)); if(!v) PrintError(FE_OUT_OF_MEMORY, err); }
+#define SaveMalloc(type, v, sz, err)	{ v = (type)malloc((size_t)(sz)); if(!(v)) PrintError(FE_OUT_OF_MEMORY, err); }

@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 strict.c
 ***
-*** Copyright (C) 1996-2014 by Arno Hollosi
+*** Copyright (C) 1996-2018 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -23,7 +23,7 @@
 *** Returns:	-
 **************************************************************************/
 
-void Crosscheck_Handicap(struct Node *root)
+static void Crosscheck_Handicap(struct Node *root)
 {
 	int setupstones = 0;
 	struct Property *prop;
@@ -65,7 +65,7 @@ void Crosscheck_Handicap(struct Node *root)
 *** Returns:	-
 **************************************************************************/
 
-void Check_Move_Order(struct Node *node, int checkSetup)
+static void Check_Move_Order(struct Node *node, int checkSetup)
 {
 	int old_col = 0;
 

@@ -2,7 +2,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 save.c
 ***
-*** Copyright (C) 1996-2014 by Arno Hollosi
+*** Copyright (C) 1996-2018 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 **************************************************************************/
@@ -16,19 +16,19 @@
 #include "protos.h"
 
 
-int save_linelen;
-int save_chars_in_node;
-int save_eol_in_node;
+static int save_linelen;
+static int save_chars_in_node;
+static int save_eol_in_node;
 
 #define MAX_LINELEN		58
 #define MAXTEXT_LINELEN 70
 
 /* This is used when option_nodelinebreaks is set, so we are
-   attempting to put linebreaks at the end of nodes.  A value near
-   MAX_LINELEN is desirable so that we don't make lines much shorter
-   or longer than we get without this option.  A value of 60 works out
-   well.  If nodes are of the form ";B[xx]", we'll get exactly 10 of
-   them per line, just like we would get without this option set. */
+ * attempting to put linebreaks at the end of nodes.  A value near
+ * MAX_LINELEN is desirable so that we don't make lines much shorter
+ * or longer than we get without this option.  A value of 60 works out
+ * well.  If nodes are of the form ";B[xx]", we'll get exactly 10 of
+ * them per line, just like we would get without this option set. */
 #define	MAX_PREDICTED_LINELEN	60
 
 #define saveputc(f,c) { if(!WriteChar((f), (c), FALSE))	return(FALSE);	}
@@ -48,7 +48,7 @@ int save_eol_in_node;
 *** Returns:	TRUE or FALSE
 **************************************************************************/
 
-int WriteChar(FILE *sfile, char c, int spc)
+static int WriteChar(FILE *sfile, char c, int spc)
 {
 	save_chars_in_node++;
 
@@ -93,7 +93,7 @@ int WriteChar(FILE *sfile, char c, int spc)
 *** Returns:	TRUE or FALSE
 **************************************************************************/
 
-int WritePropValue(char *v, int second, U_SHORT flags, FILE *sfile)
+static int WritePropValue(char *v, int second, U_SHORT flags, FILE *sfile)
 {
 	U_SHORT fl;
 
@@ -135,7 +135,7 @@ int WritePropValue(char *v, int second, U_SHORT flags, FILE *sfile)
 *** Returns:	TRUE or FALSE
 **************************************************************************/
 
-int WriteProperty(struct TreeInfo *info, struct Property *prop, FILE *sfile)
+static int WriteProperty(struct TreeInfo *info, struct Property *prop, FILE *sfile)
 {
 	static int gi_written = FALSE;
 
@@ -210,7 +210,7 @@ int WriteProperty(struct TreeInfo *info, struct Property *prop, FILE *sfile)
 *** Returns:	TRUE or FALSE
 **************************************************************************/
 
-int WriteNode(struct TreeInfo *info, struct Node *n, FILE *sfile)
+static int WriteNode(struct TreeInfo *info, struct Node *n, FILE *sfile)
 {
 	struct Property *p;
 	save_chars_in_node = 0;
@@ -248,13 +248,13 @@ int WriteNode(struct TreeInfo *info, struct Node *n, FILE *sfile)
 *** Returns:	-
 **************************************************************************/
 
-void SetRootProps(struct TreeInfo *info, struct Node *r)
+static void SetRootProps(struct TreeInfo *info, struct Node *r)
 {
 	if(r->parent)	/* isn't REAL root node */
 		return;
 
 	New_PropValue(r, TKN_FF, "4", NULL, TRUE);
-	New_PropValue(r, TKN_AP, "SGFC", "1.17", TRUE);
+	New_PropValue(r, TKN_AP, "SGFC", "1.18", TRUE);
 
 	if(info->GM == 1)			/* may be default value without property */
 		New_PropValue(r, TKN_GM, "1", NULL, TRUE);
@@ -275,7 +275,7 @@ void SetRootProps(struct TreeInfo *info, struct Node *r)
 *** Returns:	TRUE: success / FALSE error
 **************************************************************************/
 
-int WriteTree(struct TreeInfo *info, struct Node *n, FILE *sfile, int newlines)
+static int WriteTree(struct TreeInfo *info, struct Node *n, FILE *sfile, int newlines)
 {
 	if(newlines && save_linelen > 0)
 		saveputc(sfile, '\n')

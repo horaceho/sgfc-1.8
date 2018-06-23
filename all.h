@@ -3,7 +3,7 @@
 *** Project: SGF Syntax Checker & Converter
 ***	File:	 all.h
 ***
-*** Copyright (C) 1996-2014 by Arno Hollosi
+*** Copyright (C) 1996-2018 by Arno Hollosi
 *** (see 'main.c' for more copyright information)
 ***
 *** Notes:	global definition of all #defines and structures
@@ -73,7 +73,6 @@ typedef enum {
 #define SPLIT_SAVE		0x0100u	/* splitting with '\' (only text values) */
 #define DOUBLE_MERGE	0x0200u
 #define DELETE_PROP		0x0400u	/* used by -y option */
-#define TYPE_GO			0x0800u
 #define TYPE_MOVE		0x1000u
 #define TYPE_SETUP		0x2000u
 #define TYPE_ROOT		0x4000u
@@ -245,7 +244,6 @@ struct SGFToken
 #define E_ERRNO			0x00100000UL
 #define E_DEL_DOUBLE	0x00200000UL
 
-#define E_SET_SGFINFO			(0xfff | ERROR)
 #define E_OUTPUT	stdout			/* output channel for error messages */
 
 /* masks for error handling */
