@@ -224,6 +224,9 @@ int Parse_Move(char *value, U_SHORT flags)
 			return(0);
 	}
 
+	if(strlen(value) < 2)			/* value too short */
+		return(0);
+
 	if(strlen(value) != 2)			/* value too long? */
 	{
 		*(value+2) = 0;
