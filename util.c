@@ -634,6 +634,9 @@ struct PropValue *Del_PropValue(struct Property *p, struct PropValue *v)
 {
 	struct PropValue *next;
 
+	if (!v)
+		return(NULL);
+
 	if(v->value)		free(v->value);
 	if(v->value2)		free(v->value2);
 
