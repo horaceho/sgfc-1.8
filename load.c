@@ -746,24 +746,24 @@ int FindStart(int firsttime)
 
 void LoadSGF(struct SGFInfo *sgf)
 {
-    long size;
+	long size;
 	int miss;
 
 	sgfc = sgf;			/* set current SGFInfo context */
 
 	sgf->file = fopen(sgf->name, "rb");
-    if(!sgf->file)
+	if(!sgf->file)
 		PrintError(FE_SOURCE_OPEN, sgf->name);
 
-    fseek(sgf->file, 0, SEEK_END);					/* get size of file */
+	fseek(sgf->file, 0, SEEK_END);					/* get size of file */
 	size = ftell(sgf->file);
 
 	if(size == -1L)
 		PrintError(FE_SOURCE_READ, sgf->name);
 
-    SaveMalloc(char *, sgf->buffer, size, "source file buffer");
+	SaveMalloc(char *, sgf->buffer, size, "source file buffer");
 
-    if(fseek(sgf->file, 0, SEEK_SET) == -1L)	/* read SGF file */
+	if(fseek(sgf->file, 0, SEEK_SET) == -1L)	/* read SGF file */
 		PrintError(FE_SOURCE_READ, sgf->name);
 			
 	if(size != (long)fread(sgf->buffer, 1, (size_t)size, sgf->file))

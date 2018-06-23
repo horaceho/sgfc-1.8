@@ -212,7 +212,7 @@ int Parse_Move(char *value, U_SHORT flags)
 		ret = -1;
 
 	if(!strlen(value))				/* empty value? */
-    {
+	{
 		if(flags & PARSE_MOVE)
 		{
 			if(sgfc->info->FF >= 4)
@@ -222,7 +222,7 @@ int Parse_Move(char *value, U_SHORT flags)
 		}
 		else
 			return(0);
-    }
+	}
 
 	if(strlen(value) != 2)			/* value too long? */
 	{
