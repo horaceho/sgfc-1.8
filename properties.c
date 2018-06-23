@@ -119,9 +119,9 @@ struct SGFToken sgf_token[] =
 	{ "CR",	50, FF34,	Check_Pos,	Do_Markup,	CP_LIST|DOUBLE_MERGE, ST_MARKUP },
 	{ "TB",	50, FF1234,	Check_Pos,	Do_Markup,	CP_LIST|DOUBLE_MERGE, ST_TERRITORY },
 	{ "TW",	50, FF1234,	Check_Pos,	Do_Markup,	CP_LIST|DOUBLE_MERGE, ST_TERRITORY },
-	{ "DD",	50, FF4,	Check_Pos,	Do_Markup,	CP_LIST|DOUBLE_MERGE|PVT_EMPTY, ST_DIMMED },
 	{ "SQ",	50, FF4,	Check_Pos,	Do_Markup,	CP_LIST|DOUBLE_MERGE, ST_MARKUP },
 	{ "SL",	50, FF1234,	Check_Pos,	Do_Markup,	CP_LIST|DOUBLE_MERGE, ST_MARKUP },
+	{ "DD",	50, FF4,	Check_Pos,	Do_Markup,	CP_LIST|DOUBLE_MERGE|PVT_EMPTY, ST_DIMMED },
 
 	{ "PL",	35, FF1234,	Check_Color,	NULL,	TYPE_SETUP, 0 },
 	{ "V",	35, FF1234,	Check_Float,	NULL,	0, 0 },
